@@ -29,8 +29,8 @@ class Instruction:
         res = self.int_to_bin(integer)
         return "0"*(length-len(res)) + res 
 
-    def get_registers(self, args, start, num):
-        return [ int(arg.replace("r", "")) for arg in args[start:start+num] ] # Removes the 'r' from the register, and converts it to int
+    def get_registers(self, args, start_arg, num_args):
+        return [ int(arg.replace("r", "")) for arg in args[start_arg:start_arg+num_args] ] # Removes the 'r' from the register, and converts it to int
 
     def set_instruction_registers(self, instruction, registers, start):
         dest = start 
@@ -47,6 +47,11 @@ class Instruction:
 """
 
 def load(self, assembler, instruction, args, idx):
+    """ load r1, r2, 
+        # Loads the content from the ram adress in `r2` into `r1` 
+    """ 
+    registers = self.get_registers(args, 1, 2)
+    self.set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
 
