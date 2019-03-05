@@ -1,3 +1,4 @@
+movhi r1, 1337
 add r3, r2, r1
 addi r3, r2, 10
 load r3, r1

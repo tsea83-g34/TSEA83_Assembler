@@ -48,9 +48,10 @@ class Assembler():
 
         print("RESULT:")
         out = open(out_file, "w+")
-        for line in self.res:
-            out.write(line+"\n")
-            print(line)
+        output = ['"'+line+'"' for line in self.res]
+        output = ",\n".join(output)
+        print(output)
+        out.write(output)
         out.close()
 
 
