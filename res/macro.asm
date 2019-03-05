@@ -4,3 +4,5 @@
 
 addi r1, r1, 1
 inc r1
+inc r2
+inc r3

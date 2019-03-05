@@ -2,6 +2,8 @@ import argparse
 import sys 
 import os 
 from instructions import instructions 
+from macro import Macro
+
 
 class Assembler():
     def __init__(self, file_path, opt):
@@ -12,7 +14,7 @@ class Assembler():
         
         self.macros = dict()
         self.is_macro = False 
-        self.cur_macro = ""
+        self.cur_macro = None
 
         self.opt = opt  
 
@@ -36,8 +38,10 @@ class Assembler():
     def assemble(self, out_file, only_preprocess=True):
         
         idx = 0
+        self.idx = 0
         
         for line in self.file.readlines():
+            idx = self.idx
             line = line.strip()
             if len(line) == 0: # Just a blank line
                 continue
@@ -79,9 +83,29 @@ class Assembler():
         if instruction in instructions:
             asm = instructions[instruction].handle(self, line, idx)
             self.add_instruction(asm, line)
-        else: # It SHOULD be a macro
-            pass 
+        elif instruction in self.macros: # It is be a macro
+            args = line.split()[1:]
+            args = [arg.strip().replace(",", "") for arg in args]
+            macro = self.macros[instruction]
+            if len(args) != macro.num_args:
+                raise ValueError("Not enough arguments for macro '{}'".format(macro.name))
             
+            for line in macro.lines[:]:
+                print("Macro_line {}".format(line))
+                for i in range(macro.num_args):
+                    line = line.replace("${}".format(i), args[i])
+                print("Macro_line post {}".format(line))
+                instruction = line.strip()
+                self.handle_instruction(line, idx)
+                idx += 1
+
+            #raise ValueError("We have not yet implemeneted macros")
+            # Loop through every item in macro.lines
+            # Pass it as an instruction AFTER replacing the arguments with real values
+
+
+        else:
+            raise KeyError("No such instruction: {}".format(instruction))
 
     def preprocess(self, line, idx):
         if len(line.split(":")) > 1:
@@ -91,12 +115,22 @@ class Assembler():
         else:
             return line 
 
+    def continue_macro(self, line, index):
+        args = line.split()
+        if args[0] == '%'+"end":
+            self.is_macro = False 
+            return 
+        self.cur_macro.lines.append(line)
+
     def handle_macro(self, line, idx):
-        args = line.split("%macro")[1:]
+        args = line.split("%macro")[1].strip()
+        args = args.split()
+        print("ARGS: {}".format(args))
         macro_name = args[0].strip()
-        self.cur_macro = macro_name 
+        self.cur_macro = Macro(macro_name, int(args[1]))
         self.is_macro = True 
-        self.macros[macro_name] = "" 
+        self.macros[macro_name] = self.cur_macro
+        return ""
 
     def handle_labels(self, line, idx):
         args = line.split(":")
