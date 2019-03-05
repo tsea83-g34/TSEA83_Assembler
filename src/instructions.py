@@ -8,6 +8,7 @@ class Instruction:
         self.opcode = opcode
         binary = self.int_to_bin(opcode)
         self.opcode_bin = "0"*(OPCODE_LENGTH-len(binary)) + binary 
+        print("OPCODE CONTRL: ", self.opcode_bin, name)
         self.name = name
         self.handler = handler
         instructions[name] = self 
