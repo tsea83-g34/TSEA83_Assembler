@@ -9,6 +9,11 @@ class Assembler():
         self.file = open(file_path)
         self.labels = dict()
         self.res = []
+        
+        self.macros = dict()
+        self.is_macro = False 
+        self.cur_macro = ""
+
         self.opt = opt  
 
 
@@ -28,27 +33,31 @@ class Assembler():
                 self.res.append(hexa)
 
     
-    def assemble(self, out_file, only_setting_labels=True):
+    def assemble(self, out_file, only_preprocess=True):
         
         idx = 0
+        
         for line in self.file.readlines():
             line = line.strip()
             if len(line) == 0: # Just a blank line
                 continue
             if self.is_comment(line):
                 continue
+            elif self.is_macro:
+                self.continue_macro(line, idx)
+                continue
             
-            line = self.handle_labels(line, idx)
-            if len(line) > 0: # not only a label
-                if not only_setting_labels:
+            line = self.preprocess(line, idx)
+            if len(line) > 0: # not only a label => not an empty string
+                if not only_preprocess:
                     self.handle_instruction(line, idx)
                 idx += 1
 
         self.file.close()
 
-        if only_setting_labels:
+        if only_preprocess:
             self.file = open(self.file_path)
-            return self.assemble(out_file, False)
+            return self.assemble(out_file, only_preprocess=False)
 
         print("RESULT:")
         out = open(out_file, "w+")
@@ -70,14 +79,29 @@ class Assembler():
         if instruction in instructions:
             asm = instructions[instruction].handle(self, line, idx)
             self.add_instruction(asm, line)
-        else:
+        else: # It SHOULD be a macro
             pass 
-            #print("not an instruction")
+            
+
+    def preprocess(self, line, idx):
+        if len(line.split(":")) > 1:
+            return self.handle_labels(line, idx)
+        elif len(line.split("%macro")) > 1:
+            return self.handle_macro(line, idx)
+        else:
+            return line 
+
+    def handle_macro(self, line, idx):
+        args = line.split("%macro")[1:]
+        macro_name = args[0].strip()
+        self.cur_macro = macro_name 
+        self.is_macro = True 
+        self.macros[macro_name] = "" 
 
     def handle_labels(self, line, idx):
         args = line.split(":")
         if len(args) == 1:
-            return line 
+            return line # A regular assembly instruction; no line
         elif len(args) == 2:
             label = args[0]
             self.labels[label] = idx

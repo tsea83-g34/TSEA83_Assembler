@@ -86,14 +86,18 @@ def load(self, assembler, instruction, args, idx):
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
-def movhi(self, assembler, instruction, args, idx):
-    """ `movhi r1, 1336` => r1[31:15] = 1336  """ 
-    #print("MOVHI ARGS:", args)
+def movlo(self, assembler, instruction, args, idx):
+    """ `movlo r1, 1336` => r1[15:0] = 1336  """ 
     registers = get_registers(args, 1, 1)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     immediate = get_immediate(args[2])
     instruction[16:] = int_to_bin_fill(immediate, 16)
     return instruction
+    
+
+def movhi(self, assembler, instruction, args, idx):
+    """ `movhi r1, 1336` => r1[31:15] = 1336  """ 
+    return movlo(self, assembler, instruction, args, idx)
 
 
 def add(self, assembler, instruction, args, idx):
@@ -130,6 +134,7 @@ def jmp(self, assembler, instruction, args, idx):
 
 
 Instruction("load", 0x11, load)
+Instruction("movhi", 0x5, movlo)
 Instruction("movhi", 0x6, movhi)
 Instruction("addi", 0x31, addi)
 Instruction("add", 0x32, add)
