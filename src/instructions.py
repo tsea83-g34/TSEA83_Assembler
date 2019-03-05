@@ -39,6 +39,15 @@ def set_instruction_registers(instruction, registers, start):
         instruction[dest:dest+REGISTER_BITS] = int_to_bin_fill(register, REGISTER_BITS)
         dest+=REGISTER_BITS
 
+def get_immediate(immediate_str):
+    print(immediate_str)
+    if len(immediate_str) >= 2 and immediate_str[:2] == "0x":
+        return int(immediate_str, 16)
+    elif len(immediate_str) >= 2 and  immediate_str[:2] == "0b":
+        return int(immediate_str, 2)
+    else:
+        return int(immediate_str)
+
 
 class Instruction:
     def __init__(self, name, opcode, handler):
@@ -82,7 +91,8 @@ def movhi(self, assembler, instruction, args, idx):
     #print("MOVHI ARGS:", args)
     registers = get_registers(args, 1, 1)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
-    instruction[16:] = int_to_bin_fill(int(args[2]), 16)
+    immediate = get_immediate(args[2])
+    instruction[16:] = int_to_bin_fill(immediate, 16)
     return instruction
 
 
@@ -96,8 +106,9 @@ def addi(self, assembler, instruction, args, idx):
     registers = get_registers(args, 1, 2)
     #print(registers)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
-    intermediate = int_to_bin_fill(int(args[-1]), 16)
-    instruction[16:] = intermediate
+    immediate = get_immediate(args[-1])
+    immediate = int_to_bin_fill(immediate, 16)
+    instruction[16:] = immediate
     return instruction
 
 def mul(self, assembler, instruction, args, idx):

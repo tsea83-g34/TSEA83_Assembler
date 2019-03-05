@@ -9,6 +9,8 @@ jmp DIFF_LINE
 
 STUFF: addi r1, r1, 6969
 jmp LOAD
-addi r3, r1, 1337
+
 
 LOAD: load r2, r1
+addi r3, r1, 0x1f
+addi r3, r1, 0b1111
