@@ -83,7 +83,7 @@ class Assembler():
         if instruction in instructions:
             asm = instructions[instruction].handle(self, line, idx)
             self.add_instruction(asm, line)
-        elif instruction in self.macros: # It is be a macro
+        elif instruction in self.macros: # It is a macro
             args = line.split()[1:]
             args = [arg.strip().replace(",", "") for arg in args]
             macro = self.macros[instruction]
