@@ -1,25 +1,32 @@
 instructions = dict()
 
+
+
+DEBUG = False
+
 OPCODE_LENGTH = 6
 REGISTER_BITS = 5
-SIGN_BIT_16 = 1<<(15)
 
-def sign_extend_16(value):
-    return (value & (SIGN_BIT_16 - 1)) - (value & SIGN_BIT_16)
+
+""" DANK DEBUGGING OPTION """
+_print = print 
+def __print(*args, **kwargs):
+    if DEBUG:
+        _print(*args, **kwargs)
+
+print = __print
+
+
+
 
 def int_to_bin(integer):
     """ Converts and integers to a string of binary and strips away `0b`"""
-    return str(bin(integer))[2:]
+    if integer < 0:
+        byt = integer.to_bytes(2, "big", signed=True)
+        integer = int(byt.hex(), 16)
+    return bin(integer)[2:]
 
 def int_to_bin_fill(integer, length):
-    if integer < 0:
-        res = int_to_bin(abs(integer))
-        res = "0"*(length-len(res)) + res
-        res = [int(x) for x in res.split()]
-        lsb = res[::-1].index(1)
-        if lsb == -1:
-            return res ## TODO: 
-        res = [x^1 for xi]
     res = int_to_bin(integer)
     return "0"*(length-len(res)) + res 
 
@@ -43,8 +50,10 @@ class Instruction:
         instructions[name] = self 
     
     def handle(self, assembler, line, idx):
-        line = line.replace(",", "")
-        args = line.split() 
+        global DEBUG
+        DEBUG = assembler.opt.debug
+        line = line.replace(",", " ") 
+        args = line.split()
         args = [arg.strip() for arg in args]
         instruction = ["0"]*32 
         instruction[:OPCODE_LENGTH] = self.opcode_bin 
@@ -101,11 +110,10 @@ def jmp(self, assembler, instruction, args, idx):
     jmp_label = args[1]
     if jmp_label not in assembler.labels:
         raise KeyError("Such a label does not exist for jump: {}".format(jmp_label))
-    jmp_offset = idx-assembler.labels[jmp_label]
-    print("EXTEND", bin(sign_extend_16(jmp_offset)))
-    print("JMP", jmp_offset)
+    jmp_offset = assembler.labels[jmp_label] - idx
+    print("JMP to ", args[1], "offset:", jmp_offset)
     jmp_offset = int_to_bin_fill(jmp_offset, 16)
-    print("JMP OFFSET:", jmp_offset)
+    print("JMP binary OFFSET:", jmp_offset)
     instruction[16:] = jmp_offset
     return instruction
 

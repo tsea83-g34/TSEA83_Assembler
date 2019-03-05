@@ -14,7 +14,10 @@ class Assembler():
 
     def add_instruction(self, instruction, line=""):
         if self.opt.bin:
-             self.res.append(instruction)
+            if self.opt.debug:
+                self.res.append(line+": " + instruction)
+            else:
+                self.res.append(instruction)
         else:
             hexa = hex(int(instruction, 2))
             hexa = str(hexa)[2:]
@@ -36,9 +39,10 @@ class Assembler():
                 continue
             
             line = self.handle_labels(line, idx)
-            if not only_setting_labels:
-                self.handle_instruction(line, idx)
-            idx += 1
+            if len(line) > 0: # not only a label
+                if not only_setting_labels:
+                    self.handle_instruction(line, idx)
+                idx += 1
 
         self.file.close()
 
@@ -62,7 +66,7 @@ class Assembler():
 
 
     def handle_instruction(self, line, idx):
-        instruction = line.split()[0]
+        instruction = line.split()[0] 
         if instruction in instructions:
             asm = instructions[instruction].handle(self, line, idx)
             self.add_instruction(asm, line)
@@ -90,7 +94,6 @@ if __name__ == "__main__":
     parser.add_argument("--bin", action="store_const", const=True, default=False)
     parser.add_argument("--debug", action="store_const", const=True, default=False)
     opt = parser.parse_args()
-
     path = os.getcwd()
     file_name = opt.input_file
     file_path = os.getcwd() + os.sep + file_name 
