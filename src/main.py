@@ -107,10 +107,8 @@ class Assembler():
                 raise ValueError("Not enough arguments for macro '{}'".format(macro.name))
             
             for line in macro.lines[:]:
-                print("Macro_line {}".format(line))
                 for i in range(macro.num_args):
                     line = line.replace("${}".format(i), args[i])
-                print("Macro_line post {}".format(line))
                 instruction = line.strip()
                 self.handle_instruction(line)
                 self.idx += 1
@@ -126,7 +124,6 @@ class Assembler():
     def preprocess(self, line):
         if line.find("@id") != -1:
             while line.find("@id") != -1:
-                print(line)
                 i = line.find("@id")
                 if line[i:i+4] == "@id+" or line[i:i+4] == "@id-": 
                     op = line[i+3]
@@ -152,7 +149,7 @@ class Assembler():
     def handle_macro(self, line):
         args = line.split("%macro")[1].strip()
         args = args.split()
-        print("ARGS: {}".format(args))
+        #print("ARGS: {}".format(args))
         macro_name = args[0].strip()
         self.cur_macro = Macro(macro_name, int(args[1]))
         self.is_macro = True 

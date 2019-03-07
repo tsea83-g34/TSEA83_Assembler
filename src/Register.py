@@ -1,5 +1,5 @@
 
-TEST_FILL_SPOT = 10
+TEST_FILL_SPOT = 1
 
 class Register:
     def __init__(self, size: int ):
@@ -15,8 +15,6 @@ class Register:
     def parse_registers(self, assembler, args, start, num_args):
         self.assembler = assembler
         registers = args[start: start+num_args]
-        if assembler.opt.debug:
-            print("PARSE REGISTERS: ", registers)
         for i in range(len(registers)):
             register = registers[i]
             if register in assembler.variables:
@@ -27,8 +25,6 @@ class Register:
             elif register in assembler.constants:
                 register = assembler.constants[register] # SP = r20 ish
             registers[i] = int(register.replace('r', ''))
-        if assembler.opt.debug:
-            print("POST PARSE REGISTERS: ", registers)
         return registers
 
     def find_spot(self, new_variable):
@@ -43,7 +39,7 @@ class Register:
                 fill_spot(idx)
                 break 
         else:
-            self.registers[TEST_FILL_SPOT].register_kill()  
-            fill_spot(TEST_FILL_SPOT) # TODO: Fix this to remove the one with lowest priority
+            self.registers[-1].register_kill()  
+            fill_spot(TEST_FILL_SPOT-1) # TODO: Fix this to remove the one with lowest priority
 
-register = Register(16)
+register = Register(TEST_FILL_SPOT)
