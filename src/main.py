@@ -5,20 +5,27 @@ from instructions import instructions
 from macro import Macro
 
 
+#TODO: Remove unnecessary idx argument, it exists in the assembler
+
 class Assembler():
     def __init__(self, file_path, opt):
         self.file_path = file_path
         self.file = open(file_path)
         self.labels = dict()
         self.res = []
-        self.variables = {
-            "id":4163 #random start number
-        }
+
+        self.idx = 0
+        self.sp_offset = 0
         
         self.macros = dict()
         self.is_macro = False 
         self.cur_macro = None
         self.bracket_stack = []
+
+        ## VARIABLES - @var are reserved variables
+        self.variables = {
+            "@id":4163 #random start number
+        } 
 
         self.opt = opt  
 
@@ -42,7 +49,7 @@ class Assembler():
     def assemble(self, out_file, only_preprocess=True):
         
         idx = 0
-        self.idx = 0
+        
         
         for line in self.file.readlines():
             idx = self.idx
@@ -59,7 +66,7 @@ class Assembler():
             if len(line) > 0: # not only a label => not an empty string
                 if not only_preprocess:
                     self.handle_instruction(line, idx)
-                idx += 1
+                self.idx += 1
 
         self.file.close()
 
@@ -119,10 +126,10 @@ class Assembler():
                 i = line.find("@id")
                 if line[i:i+4] == "@id+" or line[i:i+4] == "@id-": 
                     op = line[i+3]
-                    self.variables["id"] += 1 if op == '+' else -1
-                    line = line.replace("@id"+op, str(self.variables["id"]))
+                    self.variables["@id"] += 1 if op == '+' else -1
+                    line = line.replace("@id"+op, str(self.variables["@id"]))
                 else:
-                    line = line.replace("@id", str(self.variables["id"]))
+                    line = line.replace("@id", str(self.variables["@id"]))
             
         if len(line.split(":")) > 1:
             return self.handle_labels(line, idx)

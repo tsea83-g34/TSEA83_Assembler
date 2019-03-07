@@ -1,6 +1,7 @@
+from typing import List
+from Register import register
+
 instructions = dict()
-
-
 
 DEBUG = False
 
@@ -30,10 +31,10 @@ def int_to_bin_fill(integer, length):
     res = int_to_bin(integer)
     return "0"*(length-len(res)) + res 
 
-def get_registers(args, start_arg, num_args):
+def get_register(args, start_arg, num_args):
     return [ int(arg.replace("r", "")) for arg in args[start_arg:start_arg+num_args] ] # Removes the 'r' from the register, and converts it to int
 
-def set_instruction_registers(instruction, registers, start):
+def set_instruction_registers(instruction: List[str], registers: int, start: int):
     dest = start 
     for register in registers:
         instruction[dest:dest+REGISTER_BITS] = int_to_bin_fill(register, REGISTER_BITS)
@@ -80,20 +81,20 @@ class Instruction:
 
 def load(self, assembler, instruction, args, idx):
     """ load r1, r2 : r1 = Mem(r2) """ 
-    registers = get_registers(args, 1, 2)
+    registers = register.parse_registers(assembler, args, 1, 2)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
 
 def store(self, assembler, instruction, args, idx):
     """ store r1, r2 : Mem(r2) = r1 """ 
-    registers = get_registers(args, 1, 2)
+    registers = register.parse_registers(assembler, args, 1, 2)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
 def movlo(self, assembler, instruction, args, idx):
     """ `movlo r1, 1336` => r1[15:0] = 1336  """ 
-    registers = get_registers(args, 1, 1)
+    registers = register.parse_registers(assembler, args, 1, 1)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     immediate = get_immediate(args[2])
     instruction[16:] = int_to_bin_fill(immediate, 16)
@@ -106,13 +107,13 @@ def movhi(self, assembler, instruction, args, idx):
 
 
 def add(self, assembler, instruction, args, idx):
-    registers = get_registers(args, 1, 3)
+    registers = register.parse_registers(assembler, args, 1, 3)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
 
 def addi(self, assembler, instruction, args, idx):
-    registers = get_registers(args, 1, 2)
+    registers = register.parse_registers(assembler, args, 1, 2)
     #print(registers)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     immediate = get_immediate(args[-1])
@@ -121,7 +122,7 @@ def addi(self, assembler, instruction, args, idx):
     return instruction
 
 def mul(self, assembler, instruction, args, idx):
-    registers = get_registers(args, 1, 3)
+    registers = register.parse_registers(assembler, args, 1, 3)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
@@ -138,11 +139,23 @@ def jmp(self, assembler, instruction, args, idx):
     return instruction
 
 
+def push(self, assembler, instruction, args, idx):
+    """ `push r1` => Mem(SP) = r1, SP++  """ 
+    registers = register.parse_registers(assembler, args, 1, 1)
+    set_instruction_registers(instruction, registers, OPCODE_LENGTH)
+    immediate = get_immediate(args[2])
+    instruction[16:] = int_to_bin_fill(immediate, 16)
+    return instruction
+    
+
+
 Instruction("load", 0x11, load)
 Instruction("store", 0x12, store)
 Instruction("movlo", 0x5, movlo)
+Instruction("ldi", 0x5, movlo)
 Instruction("movhi", 0x6, movhi)
 Instruction("addi", 0x31, addi)
 Instruction("add", 0x32, add)
 Instruction("mul", 0x38, mul)
 Instruction("jmp", 0x01, jmp)
+Instruction("push", 0x01, push)
