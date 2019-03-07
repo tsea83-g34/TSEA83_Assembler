@@ -4,3 +4,4 @@ class Macro:
         self.name = name 
         self.num_args = num_args 
         self.lines = []
+        

@@ -11,10 +11,14 @@ class Assembler():
         self.file = open(file_path)
         self.labels = dict()
         self.res = []
+        self.variables = {
+            "id":4163 #random start number
+        }
         
         self.macros = dict()
         self.is_macro = False 
         self.cur_macro = None
+        self.bracket_stack = []
 
         self.opt = opt  
 
@@ -79,13 +83,14 @@ class Assembler():
 
 
     def handle_instruction(self, line, idx):
+
         instruction = line.split()[0] 
         if instruction in instructions:
             asm = instructions[instruction].handle(self, line, idx)
             self.add_instruction(asm, line)
         elif instruction in self.macros: # It is a macro
             args = line.split()[1:]
-            args = [arg.strip().replace(",", "") for arg in args]
+            args = [arg.strip().replace(",", "") for arg in args]   # inc r1
             macro = self.macros[instruction]
             if len(args) != macro.num_args:
                 raise ValueError("Not enough arguments for macro '{}'".format(macro.name))
@@ -108,6 +113,17 @@ class Assembler():
             raise KeyError("No such instruction: {}".format(instruction))
 
     def preprocess(self, line, idx):
+        if line.find("@id") != -1:
+            while line.find("@id") != -1:
+                print(line)
+                i = line.find("@id")
+                if line[i:i+4] == "@id+" or line[i:i+4] == "@id-": 
+                    op = line[i+3]
+                    self.variables["id"] += 1 if op == '+' else -1
+                    line = line.replace("@id"+op, str(self.variables["id"]))
+                else:
+                    line = line.replace("@id", str(self.variables["id"]))
+            
         if len(line.split(":")) > 1:
             return self.handle_labels(line, idx)
         elif len(line.split("%macro")) > 1:

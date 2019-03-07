@@ -79,9 +79,14 @@ class Instruction:
 """
 
 def load(self, assembler, instruction, args, idx):
-    """ load r1, r2, 
-        # Loads the content from the ram adress in `r2` into `r1` 
-    """ 
+    """ load r1, r2 : r1 = Mem(r2) """ 
+    registers = get_registers(args, 1, 2)
+    set_instruction_registers(instruction, registers, OPCODE_LENGTH)
+    return instruction
+
+
+def store(self, assembler, instruction, args, idx):
+    """ store r1, r2 : Mem(r2) = r1 """ 
     registers = get_registers(args, 1, 2)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
@@ -134,7 +139,8 @@ def jmp(self, assembler, instruction, args, idx):
 
 
 Instruction("load", 0x11, load)
-Instruction("movhi", 0x5, movlo)
+Instruction("store", 0x12, store)
+Instruction("movlo", 0x5, movlo)
 Instruction("movhi", 0x6, movhi)
 Instruction("addi", 0x31, addi)
 Instruction("add", 0x32, add)
