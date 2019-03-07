@@ -23,7 +23,6 @@ class Register:
                 var = assembler.variables[register]
                 if var.register_idx == -1:
                     self.find_spot(var)
-                    var.insert_load(assembler)
                 register = "r{}".format(var.register_idx + 1)
             elif register in assembler.constants:
                 register = assembler.constants[register] # SP = r20 ish
@@ -44,7 +43,7 @@ class Register:
                 fill_spot(idx)
                 break 
         else:
-            self.registers[TEST_FILL_SPOT].insert_save()  
+            self.registers[TEST_FILL_SPOT].register_kill()  
             fill_spot(TEST_FILL_SPOT) # TODO: Fix this to remove the one with lowest priority
 
 register = Register(16)

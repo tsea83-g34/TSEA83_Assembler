@@ -10,6 +10,7 @@ class Variable:
         Variable.count += 1 
 
     def init_register(self, idx: int ):
+        #print("INIT REGISTER:", idx)
         self.register_idx = idx 
         self.register_start_ts = time.clock() # TODO
         self.register_uses = 0
@@ -31,3 +32,7 @@ class Variable:
     def insert_save(self, assembler): 
         # idx here is the `r{idx-1}`, i.e. index-0 based
         assembler.handle_instruction("store r{}, SP, {}".format(self.register_idx + 1, self.get_sp_offset(assembler)))
+
+    def register_kill(self):
+        self.insert_save(self.assembler)
+        self.reset_register()

@@ -34,11 +34,12 @@ def int_to_bin_fill(integer, length):
 def get_register(args, start_arg, num_args):
     return [ int(arg.replace("r", "")) for arg in args[start_arg:start_arg+num_args] ] # Removes the 'r' from the register, and converts it to int
 
-def set_instruction_registers(instruction: List[str], registers: int, start: int):
+def set_instruction_registers(instruction: List[str], registers, start):
     dest = start 
     for register in registers:
         instruction[dest:dest+REGISTER_BITS] = int_to_bin_fill(register, REGISTER_BITS)
         dest+=REGISTER_BITS
+
 
 def get_immediate(immediate_str):
     print(immediate_str)
