@@ -1,3 +1,4 @@
+    # const SP r20
     # var age
 push r0
 ldi r1, 0
@@ -15,5 +16,5 @@ load r2, SP, 1
 addi r2, 10 
 
 
-    #add age, age, y
+    # add age, age, y
 add r1, r1, r2

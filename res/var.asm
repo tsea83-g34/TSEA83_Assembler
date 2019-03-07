@@ -1,5 +1,8 @@
+const SP r20
+
 var age
 var x 
+var y 
 
-addi x, 10
-add age, age, x 
+addi y, 10
+add age, age, y

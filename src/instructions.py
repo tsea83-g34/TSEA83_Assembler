@@ -59,7 +59,7 @@ class Instruction:
         self.handler = handler
         instructions[name] = self 
     
-    def handle(self, assembler, line, idx):
+    def handle(self, assembler, line):
         global DEBUG
         DEBUG = assembler.opt.debug
         line = line.replace(",", " ") 
@@ -67,7 +67,7 @@ class Instruction:
         args = [arg.strip() for arg in args]
         instruction = ["0"]*32 
         instruction[:OPCODE_LENGTH] = self.opcode_bin 
-        res = self.handler(self, assembler, instruction, args, idx)
+        res = self.handler(self, assembler, instruction, args)
         return "".join(res)
 
 
@@ -79,20 +79,20 @@ class Instruction:
     into binary, and the rest of the bits are zeros.
 """
 
-def load(self, assembler, instruction, args, idx):
+def load(self, assembler, instruction, args):
     """ load r1, r2 : r1 = Mem(r2) """ 
     registers = register.parse_registers(assembler, args, 1, 2)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
 
-def store(self, assembler, instruction, args, idx):
+def store(self, assembler, instruction, args):
     """ store r1, r2 : Mem(r2) = r1 """ 
     registers = register.parse_registers(assembler, args, 1, 2)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
-def movlo(self, assembler, instruction, args, idx):
+def movlo(self, assembler, instruction, args):
     """ `movlo r1, 1336` => r1[15:0] = 1336  """ 
     registers = register.parse_registers(assembler, args, 1, 1)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
@@ -101,18 +101,18 @@ def movlo(self, assembler, instruction, args, idx):
     return instruction
     
 
-def movhi(self, assembler, instruction, args, idx):
+def movhi(self, assembler, instruction, args):
     """ `movhi r1, 1336` => r1[31:15] = 1336  """ 
-    return movlo(self, assembler, instruction, args, idx)
+    return movlo(self, assembler, instruction, args)
 
 
-def add(self, assembler, instruction, args, idx):
+def add(self, assembler, instruction, args):
     registers = register.parse_registers(assembler, args, 1, 3)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
 
-def addi(self, assembler, instruction, args, idx):
+def addi(self, assembler, instruction, args):
     registers = register.parse_registers(assembler, args, 1, 2)
     #print(registers)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
@@ -121,17 +121,17 @@ def addi(self, assembler, instruction, args, idx):
     instruction[16:] = immediate
     return instruction
 
-def mul(self, assembler, instruction, args, idx):
+def mul(self, assembler, instruction, args):
     registers = register.parse_registers(assembler, args, 1, 3)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
 
-def jmp(self, assembler, instruction, args, idx):
+def jmp(self, assembler, instruction, args):
     jmp_label = args[1]
     if jmp_label not in assembler.labels:
         raise KeyError("Such a label does not exist for jump: {}".format(jmp_label))
-    jmp_offset = assembler.labels[jmp_label] - idx
+    jmp_offset = assembler.labels[jmp_label] - self.idx
     print("JMP to ", args[1], "offset:", jmp_offset)
     jmp_offset = int_to_bin_fill(jmp_offset, 16)
     print("JMP binary OFFSET:", jmp_offset)
@@ -139,12 +139,11 @@ def jmp(self, assembler, instruction, args, idx):
     return instruction
 
 
-def push(self, assembler, instruction, args, idx):
-    """ `push r1` => Mem(SP) = r1, SP++  """ 
+def push(self, assembler, instruction, args):
+    """ `push r1` => Mem(SP) = r1, SP++  """
+    assembler.sp_offset -= 1 
     registers = register.parse_registers(assembler, args, 1, 1)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
-    immediate = get_immediate(args[2])
-    instruction[16:] = int_to_bin_fill(immediate, 16)
     return instruction
     
 

@@ -3,6 +3,7 @@ import sys
 import os 
 from instructions import instructions 
 from macro import Macro
+from specials import specials
 
 
 #TODO: Remove unnecessary idx argument, it exists in the assembler
@@ -25,7 +26,8 @@ class Assembler():
         ## VARIABLES - @var are reserved variables
         self.variables = {
             "@id":4163 #random start number
-        } 
+        }
+        self.constants = dict()
 
         self.opt = opt  
 
@@ -47,25 +49,24 @@ class Assembler():
 
     
     def assemble(self, out_file, only_preprocess=True):
-        
-        idx = 0
-        
-        
+
+        self.idx = 0
+
         for line in self.file.readlines():
-            idx = self.idx
             line = line.strip()
             if len(line) == 0: # Just a blank line
                 continue
             if self.is_comment(line):
                 continue
             elif self.is_macro:
-                self.continue_macro(line, idx)
+                self.continue_macro(line)
                 continue
             
-            line = self.preprocess(line, idx)
+            line = self.preprocess(line)
             if len(line) > 0: # not only a label => not an empty string
                 if not only_preprocess:
-                    self.handle_instruction(line, idx)
+                    self.handle_instruction(line)
+                    self.idx -= 1
                 self.idx += 1
 
         self.file.close()
@@ -89,12 +90,15 @@ class Assembler():
         return False 
 
 
-    def handle_instruction(self, line, idx):
+    def handle_instruction(self, line):
 
         instruction = line.split()[0] 
         if instruction in instructions:
-            asm = instructions[instruction].handle(self, line, idx)
+            asm = instructions[instruction].handle(self, line)
             self.add_instruction(asm, line)
+            self.idx += 1
+        elif instruction in specials:
+            specials[instruction](self, line)
         elif instruction in self.macros: # It is a macro
             args = line.split()[1:]
             args = [arg.strip().replace(",", "") for arg in args]   # inc r1
@@ -108,8 +112,8 @@ class Assembler():
                     line = line.replace("${}".format(i), args[i])
                 print("Macro_line post {}".format(line))
                 instruction = line.strip()
-                self.handle_instruction(line, idx)
-                idx += 1
+                self.handle_instruction(line)
+                self.idx += 1
 
             #raise ValueError("We have not yet implemeneted macros")
             # Loop through every item in macro.lines
@@ -119,7 +123,7 @@ class Assembler():
         else:
             raise KeyError("No such instruction: {}".format(instruction))
 
-    def preprocess(self, line, idx):
+    def preprocess(self, line):
         if line.find("@id") != -1:
             while line.find("@id") != -1:
                 print(line)
@@ -132,20 +136,20 @@ class Assembler():
                     line = line.replace("@id", str(self.variables["@id"]))
             
         if len(line.split(":")) > 1:
-            return self.handle_labels(line, idx)
+            return self.handle_labels(line)
         elif len(line.split("%macro")) > 1:
-            return self.handle_macro(line, idx)
+            return self.handle_macro(line)
         else:
             return line 
 
-    def continue_macro(self, line, index):
+    def continue_macro(self, line):
         args = line.split()
         if args[0] == '%'+"end":
             self.is_macro = False 
             return 
         self.cur_macro.lines.append(line)
 
-    def handle_macro(self, line, idx):
+    def handle_macro(self, line):
         args = line.split("%macro")[1].strip()
         args = args.split()
         print("ARGS: {}".format(args))
@@ -155,13 +159,13 @@ class Assembler():
         self.macros[macro_name] = self.cur_macro
         return ""
 
-    def handle_labels(self, line, idx):
+    def handle_labels(self, line):
         args = line.split(":")
         if len(args) == 1:
             return line # A regular assembly instruction; no line
         elif len(args) == 2:
             label = args[0]
-            self.labels[label] = idx
+            self.labels[label] = self.idx
             return args[1]
         else:
             raise ValueError("Syntax error: Too many colons on one line")

@@ -1,6 +1,3 @@
-from Variable import Variable 
-from main import Assembler
-
 
 TEST_FILL_SPOT = 10
 
@@ -9,23 +6,36 @@ class Register:
         self.registers = [None]*size    # List of `Variable`
         self.size = size 
         self.occupied = 0
+        self.assembler = None 
 
     def kill(self, idx: int):
         self.registers[idx] = None 
         self.occupied -= 1 
     
-    def parse_registers(self, assembler: Assembler, args, start, num_args):
+    def parse_registers(self, assembler, args, start, num_args):
+        self.assembler = assembler
         registers = args[start: start+num_args]
-        for register in registers:
+        if assembler.opt.debug:
+            print("PARSE REGISTERS: ", registers)
+        for i in range(len(registers)):
+            register = registers[i]
             if register in assembler.variables:
                 var = assembler.variables[register]
                 if var.register_idx == -1:
                     self.find_spot(var)
                     var.insert_load(assembler)
+                register = "r{}".format(var.register_idx + 1)
+            elif register in assembler.constants:
+                register = assembler.constants[register] # SP = r20 ish
+            registers[i] = int(register.replace('r', ''))
+        if assembler.opt.debug:
+            print("POST PARSE REGISTERS: ", registers)
+        return registers
 
-    def find_spot(self, new_variable: Variable):
+    def find_spot(self, new_variable):
         def fill_spot(idx: int):
-            new_variable
+            new_variable.init_register(idx)
+            new_variable.insert_load(self.assembler)
             self.registers[idx] = new_variable 
 
         min_prio = float('inf')
