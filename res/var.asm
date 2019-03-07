@@ -5,4 +5,5 @@ var x
 var y 
 
 addi y, 10
+addi x, 10
 add age, age, y

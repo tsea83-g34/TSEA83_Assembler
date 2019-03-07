@@ -149,7 +149,6 @@ class Assembler():
     def handle_macro(self, line):
         args = line.split("%macro")[1].strip()
         args = args.split()
-        #print("ARGS: {}".format(args))
         macro_name = args[0].strip()
         self.cur_macro = Macro(macro_name, int(args[1]))
         self.is_macro = True 

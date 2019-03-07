@@ -143,6 +143,7 @@ def jmp(self, assembler, instruction, args):
 def push(self, assembler, instruction, args):
     """ `push r1` => Mem(SP) = r1, SP++  """
     assembler.sp_offset -= 1 
+    #print(assembler.sp_offset, "!!")
     registers = register.parse_registers(assembler, args, 1, 1)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction

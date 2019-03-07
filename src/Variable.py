@@ -16,7 +16,8 @@ class Variable:
         self.register_uses = 0
 
     def get_sp_offset(self, assembler):
-        return assembler.sp_offset - self.var_idx + 1 # maybe +1
+        print("FIRST", self.var_idx)
+        return -(self.var_idx) - assembler.sp_offset# maybe +1
     
     def get_register_prio(self):
         return 1 
