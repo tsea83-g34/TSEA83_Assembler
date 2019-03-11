@@ -1,5 +1,5 @@
 
-TEST_FILL_SPOT = 4
+TEST_FILL_SPOT = 8
 
 class Register:
     def __init__(self, size: int ):

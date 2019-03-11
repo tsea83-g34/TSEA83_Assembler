@@ -16,6 +16,8 @@ class Assembler():
         self.res = []
 
         self.idx = 0
+        self.line_idx = 0 
+        self.lines = []
         self.sp_offset = 0
         
         self.macros = dict()
@@ -51,15 +53,16 @@ class Assembler():
     def assemble(self, out_file, only_preprocess=True):
 
         self.idx = 0
-
-        for line in self.file.readlines():
+        if only_preprocess:
+            self.lines = self.file.readlines()
+        for self.line_idx, line in enumerate(self.lines[:]):
             line = line.strip()
             if len(line) == 0: # Just a blank line
                 continue
             if self.is_comment(line):
                 continue
             elif self.is_macro:
-                self.continue_macro(line)
+                Macro.preprocess_macro(self, line)
                 continue
             
             line = self.preprocess(line)
@@ -72,7 +75,6 @@ class Assembler():
         self.file.close()
 
         if only_preprocess:
-            self.file = open(self.file_path)
             return self.assemble(out_file, only_preprocess=False)
 
         print("RESULT:")
@@ -100,25 +102,10 @@ class Assembler():
         elif instruction in specials:
             specials[instruction](self, line)
         elif instruction in self.macros: # It is a macro
-            args = line.split()[1:]
-            args = [arg.strip().replace(",", "") for arg in args]   # inc r1
-            macro = self.macros[instruction]
-            if len(args) != macro.num_args:
-                raise ValueError("Not enough arguments for macro '{}'".format(macro.name))
-            
-            for line in macro.lines[:]:
-                for i in range(macro.num_args):
-                    line = line.replace("${}".format(i), args[i])
-                instruction = line.strip()
-                self.handle_instruction(line)
-                self.idx += 1
-
-            #raise ValueError("We have not yet implemeneted macros")
-            # Loop through every item in macro.lines
-            # Pass it as an instruction AFTER replacing the arguments with real values
-
+            self.macros[instruction].handle_macro(self, line)
 
         else:
+            print(self.macros)
             raise KeyError("No such instruction: {}".format(instruction))
 
     def preprocess(self, line):
@@ -131,29 +118,15 @@ class Assembler():
                     line = line.replace("@id"+op, str(self.variables["@id"]))
                 else:
                     line = line.replace("@id", str(self.variables["@id"]))
+            self.lines[self.line_idx] = line
             
         if len(line.split(":")) > 1:
             return self.handle_labels(line)
         elif len(line.split("%macro")) > 1:
-            return self.handle_macro(line)
+            return Macro.create_macro(self, line)
         else:
             return line 
 
-    def continue_macro(self, line):
-        args = line.split()
-        if args[0] == '%'+"end":
-            self.is_macro = False 
-            return 
-        self.cur_macro.lines.append(line)
-
-    def handle_macro(self, line):
-        args = line.split("%macro")[1].strip()
-        args = args.split()
-        macro_name = args[0].strip()
-        self.cur_macro = Macro(macro_name, int(args[1]))
-        self.is_macro = True 
-        self.macros[macro_name] = self.cur_macro
-        return ""
 
     def handle_labels(self, line):
         args = line.split(":")
@@ -174,7 +147,9 @@ if __name__ == "__main__":
     parser.add_argument("--out", type=str, default="a.out")
     parser.add_argument("--bin", action="store_const", const=True, default=False)
     parser.add_argument("--debug", action="store_const", const=True, default=False)
+    parser.add_argument("--debug_spec", type=str, default="")
     opt = parser.parse_args()
+    print(opt)
     path = os.getcwd()
     file_name = opt.input_file
     file_path = os.getcwd() + os.sep + file_name 

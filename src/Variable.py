@@ -4,7 +4,7 @@ class Variable:
     count = 0
     def __init__(self, assembler):
         self.assembler = assembler
-        self.var_idx = Variable.count
+        self.sp_offset = assembler.sp_offset - 1
         self.reset_register()
         assembler.handle_instruction("push r0")
         Variable.count += 1 
@@ -16,8 +16,7 @@ class Variable:
         self.register_uses = 0
 
     def get_sp_offset(self, assembler):
-        print("FIRST", self.var_idx)
-        return -(self.var_idx) - assembler.sp_offset# maybe +1
+        return assembler.sp_offset - self.sp_offset
     
     def get_register_prio(self):
         return 1 

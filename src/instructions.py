@@ -132,23 +132,25 @@ def jmp(self, assembler, instruction, args):
     jmp_label = args[1]
     if jmp_label not in assembler.labels:
         raise KeyError("Such a label does not exist for jump: {}".format(jmp_label))
-    jmp_offset = assembler.labels[jmp_label] - self.idx
-    print("JMP to ", args[1], "offset:", jmp_offset)
+    jmp_offset = assembler.labels[jmp_label] - assembler.idx
+    if assembler.opt.debug_spec == "jmp":     
+        print("JMP to ", args[1], "offset:", jmp_offset)
+
     jmp_offset = int_to_bin_fill(jmp_offset, 16)
-    print("JMP binary OFFSET:", jmp_offset)
+    if assembler.opt.debug_spec == "jmp":   
+        print("JMP binary OFFSET:", jmp_offset)
     instruction[16:] = jmp_offset
     return instruction
 
 
 def push(self, assembler, instruction, args):
     """ `push r1` => Mem(SP) = r1, SP++  """
-    assembler.sp_offset -= 1 
-    #print(assembler.sp_offset, "!!")
+    assembler.sp_offset += 1 
     registers = register.parse_registers(assembler, args, 1, 1)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
     
-
+nop = lambda self, assembler, instruction, args: "0"*32
 
 Instruction("load", 0x11, load)
 Instruction("store", 0x12, store)
@@ -158,5 +160,7 @@ Instruction("movhi", 0x6, movhi)
 Instruction("addi", 0x31, addi)
 Instruction("add", 0x32, add)
 Instruction("mul", 0x38, mul)
+Instruction("cmpi", 0x34, nop)
 Instruction("jmp", 0x01, jmp)
+Instruction("brge", 0x02, nop)
 Instruction("push", 0x01, push)
