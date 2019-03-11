@@ -62,10 +62,12 @@ class Instruction:
     
     def handle(self, assembler, line):
         global DEBUG
-        DEBUG = assembler.opt.debug
+        
+
         line = line.replace(",", " ") 
         args = line.split()
         args = [arg.strip() for arg in args]
+        DEBUG = assembler.opt.debug and args[0] == assembler.opt.debug_spec
         instruction = ["0"]*32 
         instruction[:OPCODE_LENGTH] = self.opcode_bin 
         res = self.handler(self, assembler, instruction, args)

@@ -1,6 +1,10 @@
 import time
 
 class Variable:
+    """ Currently ONLY pushes on stack at declaration,
+        does not handle when the variable actually gets used
+        => useless
+    """
     count = 0
     def __init__(self, assembler):
         self.assembler = assembler

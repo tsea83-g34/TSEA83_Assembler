@@ -105,7 +105,6 @@ class Assembler():
             self.macros[instruction].handle_macro(self, line)
 
         else:
-            print(self.macros)
             raise KeyError("No such instruction: {}".format(instruction))
 
     def preprocess(self, line):

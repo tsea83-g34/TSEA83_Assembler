@@ -7,8 +7,10 @@ def spec(fn):
     specials[name] = fn 
 
 
+# Does not seem to work
 @spec
 def var (assembler, line):
+    """ DC """
     var = line.split()[1].strip()
     assembler.variables[var] = Variable(assembler)
 
