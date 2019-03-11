@@ -159,6 +159,7 @@ Instruction("movlo", 0x5, movlo)
 Instruction("ldi", 0x5, movlo)
 Instruction("movhi", 0x6, movhi)
 Instruction("addi", 0x31, addi)
+Instruction("subi", 0x36, addi)
 Instruction("add", 0x32, add)
 Instruction("mul", 0x38, mul)
 Instruction("cmpi", 0x34, nop)
@@ -168,6 +169,7 @@ Instruction("brg", 0x03, jmp)
 Instruction("breq", 0x04, jmp)
 Instruction("push", 0x01, push)
 
+Instruction("and", 0x10, nop)
 
 if __name__ == "__main__":
 

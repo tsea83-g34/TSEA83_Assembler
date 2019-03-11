@@ -24,15 +24,16 @@ def remove_comments_and_whitespace(assembler):
         elif line.find(";") != -1:
             line = line[:]
         if len(line) == 0:
-            continue 
+            continue
         assembler.lines[idx] = line 
         idx += 1
     assembler.lines = assembler.lines[:idx]
+    print("(Code after remove comments) {}".format("\n".join(assembler.lines)))
 
 
 def register_macros(assembler):
     cur_macro = None 
-    is_macro = True 
+    is_macro = False 
     lines = []
     for line in assembler.lines[:]:
         if (not is_macro) and (line.find("%macro") == -1): 
@@ -75,6 +76,8 @@ def handle_macros(assembler):
             lines.append(line)
     assembler.lines = lines 
 
+
+
 def register_constants(assembler):
     lines = []
     for line in assembler.lines[:]:
@@ -88,6 +91,10 @@ def register_constants(assembler):
     assembler.lines = lines 
 
 
+## END EXPANDING
+
+
+
 def handle_constants(assembler):
     lines = []
     for line in assembler.lines[:]:
@@ -95,7 +102,7 @@ def handle_constants(assembler):
         res = [] 
         for arg in args:
             if arg in assembler.constants:
-                res.append(assembler.constans[arg]) # replace it with the constant value 
+                res.append(assembler.constants[arg]) # replace it with the constant value 
             else:
                 res.append(arg)
             # Confusion, modifies 'commas' 
@@ -126,12 +133,11 @@ def handle_instructions(assembler):
     for line in assembler.lines[:]:
         instruction = line.split()[0]
         asm = instructions[instruction].handle(assembler, line)
+        print(asm)
         assembler.add_instruction(asm, line)
         assembler.idx += 1 
 
 
-
-## END EXPANDING
 
 
 laps = [
@@ -143,3 +149,21 @@ laps = [
     handle_labels,
     handle_instructions,
 ]
+
+
+def at():
+    pass 
+    # This is shitty
+    """
+    if line.find("@id") != -1:
+    while line.find("@id") != -1:
+        i = line.find("@id")
+        if line[i:i+4] == "@id+" or line[i:i+4] == "@id-": 
+            op = line[i+3]
+            self.variables["@id"] += 1 if op == '+' else -1
+            line = line.replace("@id"+op, str(self.variables["@id"]))
+        else:
+            line = line.replace("@id", str(self.variables["@id"]))
+    self.lines[self.line_idx] = line
+            
+    """

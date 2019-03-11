@@ -1,12 +1,17 @@
+# COMMENT
 const VGA 0x200
 const FLAGS r21
 const KEY r22
+# COMMENT
 const KEY_IDX 1<<3
 const ENTER 31
 const BACKSPACE 32 
 const tile_idx r6 
 
 
+# COMMENT
+
+jmp MAIN
 
 PRINT_BACKSPACE:
     subi tile_idx, tile_idx, 1
