@@ -1,4 +1,5 @@
 from macro import Macro
+from instructions import instructions 
 
 ## EXPANDING
 def remove_comments_and_whitespace(assembler):
@@ -100,7 +101,33 @@ def handle_constants(assembler):
             # Confusion, modifies 'commas' 
         lines.append(" ".join(res))
     assembler.lines = lines
-            
+### Maybe @variables, like @anon ....
+###
+
+
+def handle_labels(assembler):
+    idx = 0
+    lines = [] 
+    for line in assembler.lines: # don't need copying
+        args = [arg.strip() for arg in line.split(":")] 
+        if line.find(':') != -1:
+            label, rest = line.split(':')
+            if len(rest) == 0:
+                line = rest
+                assembler.labels[label] = idx 
+                continue # Don't need to increment, like putting label on same line
+            assembler.labels[label] = idx 
+        lines.append(line)
+        idx += 1 
+    assembler.lines = lines 
+
+
+def handle_instructions(assembler):
+    for line in assembler.lines[:]:
+        instruction = line.split()[0]
+        asm = instructions[instruction].handle(assembler, line)
+        assembler.add_instruction(asm, line)
+        assembler.idx += 1 
 
 
 
@@ -111,4 +138,8 @@ laps = [
     remove_comments_and_whitespace,
     register_macros,
     handle_macros,
+    register_constants,
+    handle_constants,
+    handle_labels,
+    handle_instructions,
 ]

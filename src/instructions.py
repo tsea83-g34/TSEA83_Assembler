@@ -9,13 +9,8 @@ OPCODE_LENGTH = 6
 REGISTER_BITS = 5
 
 
-""" DANK DEBUGGING OPTION """
-_print = print 
-def __print(*args, **kwargs):
-    if DEBUG:
-        _print(*args, **kwargs)
+""" SUPER REMOVED - DANK DEBUGGING OPTION """
 
-print = __print
 
 
 
@@ -42,7 +37,11 @@ def set_instruction_registers(instruction: List[str], registers, start):
 
 
 def get_immediate(immediate_str):
-    print(immediate_str)
+    ops = {"<<", ">>", "*", "+", "-", "/", "**"}
+    not_in_ops = False
+    for op in ops:
+        if immediate_str.find(op) != -1:
+            return eval(immediate_str)
     if len(immediate_str) >= 2 and immediate_str[:2] == "0x":
         return int(immediate_str, 16)
     elif len(immediate_str) >= 2 and  immediate_str[:2] == "0b":
@@ -133,7 +132,7 @@ def mul(self, assembler, instruction, args):
 def jmp(self, assembler, instruction, args):
     jmp_label = args[1]
     if jmp_label not in assembler.labels:
-        raise KeyError("Such a label does not exist for jump: {}".format(jmp_label))
+        raise KeyError("Such a label does not exist for jump/branch: {}".format(jmp_label))
     jmp_offset = assembler.labels[jmp_label] - assembler.idx
     if assembler.opt.debug_spec == "jmp":     
         print("JMP to ", args[1], "offset:", jmp_offset)
@@ -164,5 +163,14 @@ Instruction("add", 0x32, add)
 Instruction("mul", 0x38, mul)
 Instruction("cmpi", 0x34, nop)
 Instruction("jmp", 0x01, jmp)
-Instruction("brge", 0x02, nop)
+Instruction("brge", 0x02, jmp)
+Instruction("brg", 0x03, jmp)
+Instruction("breq", 0x04, jmp)
 Instruction("push", 0x01, push)
+
+
+if __name__ == "__main__":
+
+    import sys 
+    res = get_immediate(sys.argv[1])
+    print(res)
