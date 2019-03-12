@@ -47,6 +47,7 @@ def register_macros(assembler):
             else:
                 cur_macro.lines.append(line)
         else:
+            is_macro = True
             args = line.split()
             name = args[1]
             num_args = int(args[2])
@@ -66,15 +67,12 @@ def handle_macros(assembler):
         args = [arg.strip().replace(",", "") for arg in args]   # inc r1
         if len(args) != macro.num_args:
             raise ValueError("Not enough arguments for macro '{}'".format(macro.name))
-        
         for line in macro.lines[:]:
             for i in range(macro.num_args):
                 line = line.replace("${}".format(i), args[i])
-            line = assembler.preprocess(line)
-            if len(line) == 0 or assembler.is_comment(line):
-                continue 
             lines.append(line)
     assembler.lines = lines 
+    print("(Code after handle macros)\n {}".format("\n".join(assembler.lines)))
 
 
 
@@ -133,7 +131,6 @@ def handle_instructions(assembler):
     for line in assembler.lines[:]:
         instruction = line.split()[0]
         asm = instructions[instruction].handle(assembler, line)
-        print(asm)
         assembler.add_instruction(asm, line)
         assembler.idx += 1 
 
@@ -144,6 +141,7 @@ laps = [
     remove_comments_and_whitespace,
     register_macros,
     handle_macros,
+    handle_macros, # To handle macro calls in macro
     register_constants,
     handle_constants,
     handle_labels,
