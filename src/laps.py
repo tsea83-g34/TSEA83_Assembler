@@ -22,13 +22,13 @@ def remove_comments_and_whitespace(assembler):
         elif line.find("//") != -1:
             line = line[:line.find("//")]
         elif line.find(";") != -1:
-            line = line[:]
+            line = line[:line.find(";")]
         if len(line) == 0:
             continue
         assembler.lines[idx] = line 
         idx += 1
     assembler.lines = assembler.lines[:idx]
-    print("(Code after remove comments) {}".format("\n".join(assembler.lines)))
+    
 
 
 def register_macros(assembler):
@@ -72,8 +72,7 @@ def handle_macros(assembler):
                 line = line.replace("${}".format(i), args[i])
             lines.append(line)
     assembler.lines = lines 
-    print("(Code after handle macros)\n {}".format("\n".join(assembler.lines)))
-
+    
 
 
 def register_constants(assembler):
@@ -132,10 +131,10 @@ def handle_instructions(assembler):
         instruction = line.split()[0]
         asm = instructions[instruction].handle(assembler, line)
         assembler.add_instruction(asm, line)
-        assembler.idx += 1 
+        assembler.idx += 1 # Needed by `assembler.add_instruction` in next pass
 
 
-
+from data_lap import store_data_memory
 
 laps = [
     remove_comments_and_whitespace,
@@ -144,8 +143,10 @@ laps = [
     handle_macros, # To handle macro calls in macro
     register_constants,
     handle_constants,
+    store_data_memory, # Has to be after constants, and before labels
     handle_labels,
     handle_instructions,
+    
 ]
 
 

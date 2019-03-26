@@ -37,6 +37,9 @@ def set_instruction_registers(instruction: List[str], registers, start):
 
 
 def get_immediate(immediate_str):
+    return eval(immediate_str)
+
+    """ # eval is overpowered #
     ops = {"<<", ">>", "*", "+", "-", "/", "**"}
     not_in_ops = False
     for op in ops:
@@ -48,6 +51,7 @@ def get_immediate(immediate_str):
         return int(immediate_str, 2)
     else:
         return int(immediate_str)
+    """
 
 
 class Instruction:

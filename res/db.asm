@@ -1,4 +1,10 @@
 .ds "hello"
-.db 
-.dh ; half word 16 bits
-.dw ; 32 bits 
+
+.db 0xff
+.dh 0xaaaa; half word 16 bits
+.dw 0x1234fedc ; 32 bits 
+.db 20: 0xfd
+/*
+.db 10: 0xaa
+.db 0xf: 0x0f
+*/
