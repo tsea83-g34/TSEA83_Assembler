@@ -1,11 +1,6 @@
 const SP r14
 
 
-movlo r1, 10
-movlo r2, 20 
-min(r1, r2) => r3
-
-; jmp }
 fn min (x, y) {
     cmp x, y 
     brge min_y
@@ -13,6 +8,12 @@ fn min (x, y) {
 min_y:  
     return y
 }
+
+movlo r1, 10
+movlo r2, 20 
+min(r1, r2) => r3
+
+
 
 
 

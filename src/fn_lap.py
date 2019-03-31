@@ -13,6 +13,7 @@ def register_functions(assembler):
         line.replace("(", " (")
         if is_func: 
             if line.find("}") != -1:
+                lines.append("{}_end:".format(cur_func.name)) # So we don't run a function when passing
                 is_func = False 
                 cur_func = None
                 continue 
@@ -41,6 +42,7 @@ def register_functions(assembler):
             line = fn_name + ':'
             is_func = True 
             cur_func = Function(fn_name, args)
+            lines.append("jmp {}_end".format(fn_name))
             lines.append(line)
             lines += func_init_lines(args)
 
