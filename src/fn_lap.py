@@ -56,17 +56,30 @@ def func_init_lines(args):
     for i in range(1, num_args + 1):
         lines.append("push r{}".format(i))
     for i in range(1, num_args+1):
-        lines.append("load r{}, r0, SP+{}".format(i, -(num_args*2 - i + 1)))
+        lines.append("load r{}, SP, {}".format(i, -(num_args*2 - i + 1)))
     return lines
     
 
 def handle_functions(assembler):
     lines = []
     for line in assembler.lines:
-        line = line.replace("(", " (")
+        line = line.replace("(", " ")
+        line = line.replace(",", " ")
+        line = line.replace(")", " ")
         cmd = line.split()[0]
         if cmd in functions:
-            line = "call {}".format(cmd)
-
+                    
+            left = line.split("=>")[0] # Does not handle multiple calls in one line 
+            args = left.split()[1:]
+            for arg in args:
+                lines.append("push {}".format(arg))
+            lines.append("call {}".format(cmd))
+            if len(line.split("=>")) > 0:
+                right = line.split("=>")[1].strip()
+                lines.append("pop {}".format(right))
+            else:
+                lines.append("pop r15") # anon, don't care about val, or void
+            continue
+                
         lines.append(line) 
     assembler.lines = lines

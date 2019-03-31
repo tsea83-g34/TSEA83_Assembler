@@ -86,9 +86,11 @@ class Instruction:
 """
 
 def load(self, assembler, instruction, args):
-    """ load r1, r2 : r1 = Mem(r2) """ 
+    """ load r1, r2, imm : r1 = Mem(r2+imm) """ 
     registers = register.parse_registers(assembler, args, 1, 2)
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
+    immediate = get_immediate(args[3])
+    instruction[16:] = int_to_bin_fill(immediate, 16)
     return instruction
 
 

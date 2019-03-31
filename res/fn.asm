@@ -1,4 +1,4 @@
-const SP 0x400
+const SP r14
 
 
 movlo r1, 10
