@@ -159,6 +159,7 @@ nop = lambda self, assembler, instruction, args: "0"*32
 
 Instruction("load", 0x11, load)
 Instruction("store", 0x12, store)
+Instruction("mov", 0x4, nop)
 Instruction("movlo", 0x5, movlo)
 Instruction("ldi", 0x5, movlo)
 Instruction("movhi", 0x6, movhi)
@@ -166,13 +167,16 @@ Instruction("addi", 0x31, addi)
 Instruction("subi", 0x36, addi)
 Instruction("add", 0x32, add)
 Instruction("mul", 0x38, mul)
+Instruction("cmp", 0x33, nop)
 Instruction("cmpi", 0x34, nop)
+Instruction("call", 0x07, jmp)
+Instruction("ret", 0x07, nop) # TODO
 Instruction("jmp", 0x01, jmp)
 Instruction("brge", 0x02, jmp)
 Instruction("brg", 0x03, jmp)
 Instruction("breq", 0x04, jmp)
 Instruction("push", 0x01, push)
-
+Instruction("pop", 0x01, push) #TODO
 Instruction("and", 0x10, nop)
 
 if __name__ == "__main__":

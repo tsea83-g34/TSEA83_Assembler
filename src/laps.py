@@ -135,12 +135,15 @@ def handle_instructions(assembler):
 
 
 from data_lap import store_data_memory
+from fn_lap import register_functions, handle_functions 
 
 laps = [
     remove_comments_and_whitespace,
     register_macros,
     handle_macros,
     handle_macros, # To handle macro calls in macro
+    register_functions,
+    handle_functions, 
     register_constants,
     handle_constants,
     store_data_memory, # Has to be after constants, and before labels
