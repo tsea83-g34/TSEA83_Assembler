@@ -39,20 +39,27 @@ def set_instruction_registers(instruction: List[str], registers, start):
 def get_immediate(immediate_str):
     return eval(immediate_str)
 
-    """ # eval is overpowered #
-    ops = {"<<", ">>", "*", "+", "-", "/", "**"}
-    not_in_ops = False
-    for op in ops:
-        if immediate_str.find(op) != -1:
-            return eval(immediate_str)
-    if len(immediate_str) >= 2 and immediate_str[:2] == "0x":
-        return int(immediate_str, 16)
-    elif len(immediate_str) >= 2 and  immediate_str[:2] == "0b":
-        return int(immediate_str, 2)
-    else:
-        return int(immediate_str)
-    """
+def fetch_registers(num_registers, dest_start_index=6, args_idx=1):
+    def anon(self, assembler, instruction, args):
+        registers = register.parse_registers(assembler, args, args_idx, num_registers)
+        set_instruction_registers(instruction, registers, dest_start_index)
+        return instruction
+    return anon
 
+def fetch_immediate(arg_idx):
+    def anon(self, assembler, instruction, args):
+        immediate_str = args[arg_idx]
+        val = get_immediate(immediate_str)
+        instruction[16:] = val 
+        return instruction
+    return anon
+
+def chain(*functions):
+    def anon(self, assembler, instruction, args):
+        for function in functions:
+            instruction = function(self, assembler, instruction, args)
+        return instruction
+    return anon
 
 class Instruction:
     def __init__(self, name, opcode, handler):

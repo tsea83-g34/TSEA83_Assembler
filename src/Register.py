@@ -17,6 +17,7 @@ class Register:
         registers = args[start: start+num_args]
         for i in range(len(registers)):
             register = registers[i]
+            # LEGACY, not needed #
             if register in assembler.variables:
                 var = assembler.variables[register]
                 if var.register_idx == -1:
@@ -24,6 +25,7 @@ class Register:
                 register = "r{}".format(var.register_idx + 1)
             elif register in assembler.constants:
                 register = assembler.constants[register] # SP = r20 ish
+            # #
             registers[i] = int(register.replace('r', ''))
         return registers
 
