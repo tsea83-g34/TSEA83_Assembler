@@ -1,0 +1,6 @@
+[
+    {
+        "name": "addi",
+        "description": "rD <= rA + rB"
+    }
+]

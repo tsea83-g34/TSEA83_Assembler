@@ -1,5 +1,5 @@
 from macro import Macro
-from instructions import instructions 
+from instructions.instructions import instructions 
 
 ## EXPANDING
 def remove_comments_and_whitespace(assembler):
