@@ -6,7 +6,7 @@ instructions = dict()
 DEBUG = False
 
 OPCODE_LENGTH = 6
-REGISTER_BITS = 5
+REGISTER_BITS = 4
 
 
 """ SUPER REMOVED - DANK DEBUGGING OPTION """
@@ -39,12 +39,14 @@ def set_instruction_registers(instruction: List[str], registers, start):
 def get_immediate(immediate_str):
     return eval(immediate_str)
 
+
 def fetch_registers(num_registers, dest_start_index=6, args_idx=1):
     def anon(self, assembler, instruction, args):
         registers = register.parse_registers(assembler, args, args_idx, num_registers)
         set_instruction_registers(instruction, registers, dest_start_index)
         return instruction
     return anon
+
 
 def fetch_immediate(arg_idx, length=16, ir_idx=16):
     def anon(self, assembler, instruction, args):
@@ -76,7 +78,9 @@ class Instruction:
 
         line = line.replace(",", " ") 
         args = line.split()
-        args = [arg.strip() for arg in args]
+        if args[0].find("[") != -1:
+            pass
+        #args = [arg.strip() for arg in args]
         DEBUG = assembler.opt.debug and args[0] == assembler.opt.debug_spec
         instruction = ["0"]*32 
         instruction[:OPCODE_LENGTH] = self.opcode_bin 
