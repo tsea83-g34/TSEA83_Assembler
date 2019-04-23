@@ -5,3 +5,7 @@ Right now the 32-bit instructions are modelled after lab2 in TSEA83 (except for 
 Progress:
 * Right now the assembler can handle all the instructions in `res/t1.asm`
 
+
+## TODO 
+* Labels for data 
+* Handle sizes 

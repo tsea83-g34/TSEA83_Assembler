@@ -1,5 +1,5 @@
-from instructions import get_immediate, int_to_bin_fill
-
+from instructions.instructions import get_immediate, int_to_bin_fill
+ 
 
 byte_sizes = {
     ".db": 1,

@@ -126,6 +126,27 @@ def handle_labels(assembler):
     assembler.lines = lines 
 
 
+def handle_sizes(assembler):
+    lines = []
+    for line in assembler.lines:
+        line = line.replace("[", " [")
+        line = line.replace("]", "] ") # Push it back
+        line = line.replace(",", " ")
+        args = line.split()
+        new_args = []
+        size_args = []
+        for arg in args:
+            if arg.find("[") != -1:
+                size_args.append(arg)
+            else:
+                new_args.append(arg)
+        line = " ".join(new_args + size_args)
+
+        lines.append(line) 
+        # This works if size is last argument, I think, but not first 
+    assembler.lines = lines 
+
+
 def handle_instructions(assembler):
     for line in assembler.lines[:]:
         instruction = line.split()[0]
@@ -148,8 +169,8 @@ laps = [
     handle_constants,
     store_data_memory, # Has to be after constants, and before labels
     handle_labels,
+    handle_sizes,
     handle_instructions,
-    
 ]
 
 
