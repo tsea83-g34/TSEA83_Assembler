@@ -14,7 +14,7 @@ class Variable:
         Variable.count += 1 
 
     def init_register(self, idx: int ):
-        #print("INIT REGISTER:", idx)
+        #print("INIT REGISTER:", idx) 
         self.register_idx = idx 
         self.register_start_ts = time.clock() # TODO
         self.register_uses = 0
