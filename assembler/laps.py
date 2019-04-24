@@ -128,15 +128,14 @@ def handle_labels(assembler):
 
 def handle_sizes(assembler):
     lines = []
+    has_size = lambda arg: arg.find("[") != -1
     for line in assembler.lines:
-        line = line.replace("[", " [")
-        line = line.replace("]", "] ") # Push it back
-        line = line.replace(",", " ")
+        line = line.replace("[", " [").replace("]", "] ").replace(",", " ")
         args = line.split()
         new_args = []
         size_args = []
         for arg in args:
-            if arg.find("[") != -1:
+            if has_size(arg):
                 size_args.append(arg)
             else:
                 new_args.append(arg)
