@@ -1,5 +1,5 @@
-from typing import List
-from Register import register
+from assembler.Register import register
+
 
 instructions = dict()
 
@@ -29,7 +29,8 @@ def int_to_bin_fill(integer, length):
 def get_register(args, start_arg, num_args):
     return [ int(arg.replace("r", "")) for arg in args[start_arg:start_arg+num_args] ] # Removes the 'r' from the register, and converts it to int
 
-def set_instruction_registers(instruction: List[str], registers, start):
+def set_instruction_registers(instruction, registers, start):
+    print("START", start)
     dest = start 
     for register in registers:
         instruction[dest:dest+REGISTER_BITS] = int_to_bin_fill(register, REGISTER_BITS)
@@ -40,7 +41,8 @@ def get_immediate(immediate_str):
     return eval(immediate_str)
 
 
-def fetch_registers(num_registers, dest_start_index=6, args_idx=1):
+def fetch_registers(num_registers, dest_start_index=8, args_idx=1):
+    print("DEST:", dest_start_index)
     def anon(self, assembler, instruction, args):
         registers = register.parse_registers(assembler, args, args_idx, num_registers)
         set_instruction_registers(instruction, registers, dest_start_index)
@@ -169,7 +171,7 @@ def push(self, assembler, instruction, args):
     return instruction
     
 nop = lambda self, assembler, instruction, args: "0"*32
-
+"""
 Instruction("load", 0x11, load)
 Instruction("store", 0x12, store)
 Instruction("mov", 0x4, nop)
@@ -191,6 +193,14 @@ Instruction("breq", 0x04, jmp)
 Instruction("push", 0x01, push)
 Instruction("pop", 0x01, push) #TODO
 Instruction("and", 0x10, nop)
+"""
+
+
+# IMPORTS 
+
+import assembler.instructions.alu_instructions
+import assembler.instructions.mem_instructions
+import assembler.instructions.branch_instructions
 
 if __name__ == "__main__":
 

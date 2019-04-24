@@ -2,13 +2,13 @@
 TEST_FILL_SPOT = 8
 
 class Register:
-    def __init__(self, size: int ):
+    def __init__(self, size):
         self.registers = [None]*size    # List of `Variable`
         self.size = size 
         self.occupied = 0
         self.assembler = None 
 
-    def kill(self, idx: int):
+    def kill(self, idx):
         self.registers[idx] = None 
         self.occupied -= 1 
     
@@ -30,7 +30,7 @@ class Register:
         return registers
 
     def find_spot(self, new_variable):
-        def fill_spot(idx: int):
+        def fill_spot(idx):
             new_variable.init_register(idx)
             new_variable.insert_load(self.assembler)
             self.registers[idx] = new_variable 

@@ -1,4 +1,4 @@
-from instructions.instructions import get_immediate, int_to_bin_fill
+from assembler.instructions.instructions import get_immediate, int_to_bin_fill
  
 
 byte_sizes = {

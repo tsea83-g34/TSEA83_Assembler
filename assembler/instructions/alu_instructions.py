@@ -1,4 +1,6 @@
-from instructions import Instruction, fetch_registers, fetch_immediate, chain 
+import assembler
+print(assembler)
+from assembler.instructions.instructions import Instruction, fetch_registers, fetch_immediate, chain 
 
 ## LOGICAL
 Instruction("and", 0x10, chain(

@@ -1,4 +1,4 @@
-from instructions import Instruction, fetch_registers, fetch_immediate, chain, jmp
+from assembler.instructions.instructions import Instruction, fetch_registers, fetch_immediate, chain, jmp
 
 
 

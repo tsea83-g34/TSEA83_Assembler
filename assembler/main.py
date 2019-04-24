@@ -1,7 +1,7 @@
 import argparse 
 import sys 
 import os 
-from laps import laps
+from assembler.laps import laps
 
 
 class Assembler():
@@ -85,8 +85,7 @@ class Assembler():
 
 
 
-
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input_file", type=str)
     parser.add_argument("--out", type=str, default="a.out")
@@ -101,3 +100,6 @@ if __name__ == "__main__":
     file_path = os.getcwd() + os.sep + file_name 
     assembler = Assembler(file_path, opt)
     assembler.assemble(path + os.sep + opt.out)
+
+if __name__ == "__main__":
+    main()

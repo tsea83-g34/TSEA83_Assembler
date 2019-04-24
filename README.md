@@ -9,3 +9,6 @@ Progress:
 ## TODO 
 * Labels for data 
 * Handle sizes 
+
+
+[Instruction Set](https://docs.google.com/document/d/1ifDim_7zJk_YUjTFmD8vfV7TSoW3sWbZ33SN53SA7Xw/edit#heading=h.esqd8f5jqki5)

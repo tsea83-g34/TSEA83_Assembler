@@ -1,5 +1,5 @@
-from macro import Macro
-from instructions.instructions import instructions 
+from assembler.macro import Macro
+from assembler.instructions.instructions import instructions 
 
 ## EXPANDING
 def remove_comments_and_whitespace(assembler):
@@ -155,8 +155,8 @@ def handle_instructions(assembler):
         assembler.idx += 1 # Needed by `assembler.add_instruction` in next pass
 
 
-from data_lap import store_data_memory
-from fn_lap import register_functions, handle_functions 
+from assembler.data_lap import store_data_memory
+from assembler.fn_lap import register_functions, handle_functions 
 
 laps = [
     remove_comments_and_whitespace,

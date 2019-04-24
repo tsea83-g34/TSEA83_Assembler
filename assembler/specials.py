@@ -1,4 +1,4 @@
-from Variable import Variable
+from assembler.Variable import Variable
 
 specials = dict()
 
