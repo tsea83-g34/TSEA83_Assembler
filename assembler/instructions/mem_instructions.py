@@ -1,8 +1,9 @@
-from assembler.instructions.instructions import Instruction, fetch_registers, fetch_immediate, chain
+from assembler.instructions.instructions import Instruction, fetch_registers, fetch_immediate, chain, fetch_size
 
 
 # load word
 Instruction("load", 0x11, chain(
+    fetch_size(),
     fetch_registers(2),
     fetch_immediate(3),
 ))
@@ -19,6 +20,7 @@ Instruction("ldh", 0x11, chain(
 
 
 Instruction("store", 0x12, chain(
+    fetch_size(),
     fetch_registers(2),
     fetch_immediate(3),
 ))

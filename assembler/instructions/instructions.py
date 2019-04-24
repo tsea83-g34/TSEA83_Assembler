@@ -30,7 +30,6 @@ def get_register(args, start_arg, num_args):
     return [ int(arg.replace("r", "")) for arg in args[start_arg:start_arg+num_args] ] # Removes the 'r' from the register, and converts it to int
 
 def set_instruction_registers(instruction, registers, start):
-    print("START", start)
     dest = start 
     for register in registers:
         instruction[dest:dest+REGISTER_BITS] = int_to_bin_fill(register, REGISTER_BITS)
@@ -42,7 +41,6 @@ def get_immediate(immediate_str):
 
 
 def fetch_registers(num_registers, dest_start_index=8, args_idx=1):
-    print("DEST:", dest_start_index)
     def anon(self, assembler, instruction, args):
         registers = register.parse_registers(assembler, args, args_idx, num_registers)
         set_instruction_registers(instruction, registers, dest_start_index)
@@ -55,6 +53,15 @@ def fetch_immediate(arg_idx, length=16, ir_idx=16):
         immediate_str = args[arg_idx]
         val = get_immediate(immediate_str)
         instruction[ir_idx:ir_idx+length] = int_to_bin_fill(val, length) 
+        return instruction
+    return anon
+
+def fetch_size(dest=6):
+    def anon(self, assembler, instruction, args):
+        size = 4 
+        if args[-1].find("[") != -1:
+            size = eval(args[-1].replace("[", "").replace("]", ""))
+        instruction[dest:dest+2] = int_to_bin_fill(size-1, 2)
         return instruction
     return anon
 
