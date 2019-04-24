@@ -1,5 +1,3 @@
-import assembler
-print(assembler)
 from assembler.instructions.instructions import Instruction, fetch_registers, fetch_immediate, chain 
 
 ## LOGICAL

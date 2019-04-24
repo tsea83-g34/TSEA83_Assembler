@@ -83,16 +83,14 @@ class Instruction:
     
     def handle(self, assembler, line):
         global DEBUG
-        
 
         line = line.replace(",", " ") 
         args = line.split()
-        if args[0].find("[") != -1:
-            pass
-        #args = [arg.strip() for arg in args]
+
         DEBUG = assembler.opt.debug and args[0] == assembler.opt.debug_spec
         instruction = ["0"]*32 
         instruction[:OPCODE_LENGTH] = self.opcode_bin 
+        instruction[OPCODE_LENGTH:OPCODE_LENGTH + 2] = "11" # Default is 32 bits
         res = self.handler(self, assembler, instruction, args)
         return "".join(res)
 
