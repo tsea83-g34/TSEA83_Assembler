@@ -44,7 +44,6 @@ class Data:
     
     def init_str(self):
         self.val = self.val.replace("\"", "") # "asda" -> asda
-        print(self.val)
         for char in self.val:
             self.vals.append(char_to_bin(char))
         self.vals.append("0"*8) # append NULL
@@ -64,17 +63,21 @@ def store_data_memory(assembler):
     inc_addresses = []
     # Even if should overwrite, better to seperate 
     lines = [] # Remove all .db stuff
+    
     for line in assembler.lines:
-        if line.find(".d") != -1:
+        if line.find(".d") != -1: # Unsafe and shitty
             line.replace(":", ": ") # Easier 
             args = line.split() # Also strips it 
             cmd = args[0]
+
             addr = None # Just auto inc
             if line.find(":") != -1: # Absolute address `.db 100: 0xff`
                 val = args[2]
                 addr = get_immediate(args[1].replace(":", ""))
                 abs_addresses.append(Data(cmd, val, addr))
             else:
+                # adds .data labels as well
+                
                 val = args[1]
                 inc_addresses.append(Data(cmd, val, addr))
         else:
@@ -93,8 +96,10 @@ def store_data_memory(assembler):
     
     idx = 0
     for data in inc_addresses:
+        if data.cmd == ".data":
+            assembler.constants[data.val] = str(idx)
+            continue
         data_memory[idx: idx+data.size] = data.vals 
         idx += data.size 
     assembler.data_memory = data_memory
-    
     

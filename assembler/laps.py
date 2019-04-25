@@ -167,6 +167,7 @@ laps = [
     register_constants,
     handle_constants,
     store_data_memory, # Has to be after constants, and before labels
+    handle_constants, # Handle constants created in store_data_memory
     handle_labels,
     handle_sizes,
     handle_instructions,

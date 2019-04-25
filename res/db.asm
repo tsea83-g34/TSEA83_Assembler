@@ -2,9 +2,8 @@
 
 .db 0xff
 .dh 0xaaaa; half word 16 bits
+
+.data VARIABLES
 .dw 0x1234fedc ; 32 bits 
 .db 20: 0xfd
-/*
-.db 10: 0xaa
-.db 0xf: 0x0f
-*/
+load r1, r0, VARIABLES 
