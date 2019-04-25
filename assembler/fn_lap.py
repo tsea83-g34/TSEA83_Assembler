@@ -57,8 +57,8 @@ def func_init_lines(args):
     num_args = len(args)
     for i in range(1, num_args + 1):
         lines.append("push r{}".format(i))
-    for i in range(1, num_args+1):
-        lines.append("load r{}, SP, {}".format(i, -(num_args*2 - i + 1)))
+    for i in range(1, num_args + 1):
+        lines.append("load r{}, SP, {}".format(i, (num_args*2 - i + 1))) # Stack grows High to Low
     return lines
     
 
