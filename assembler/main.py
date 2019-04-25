@@ -70,16 +70,34 @@ class Assembler():
         if self.opt.debug:
             self.res = self.add_debug(self.res)
 
-        print("RESULT:\n" + self.write_file(out_file, self.res))
-        pm_res = self.write_file(self.opt.pm_name, self.data_memory)
-        print("DM Res:\n"+pm_res)
+        print("PM RES:\n" + self.write_file(out_file, self.res, "--$PROGRAM"))
+        dm_res = self.write_file(self.opt.dm_name, self.data_memory, "--$DATA")
+        print("DM Res:\n"+dm_res)
     
-    def write_file(self, name, values):
+    def write_file(self, name, values, token="--$PROGRAM"):
+        with open(name) as file:
+            prev_out = file.read()
         out = open(name, "w+")
         beginning = '"' if self.opt.bin else 'X"'
         output = [beginning + line + '"' for line in values]
         output = ",\n".join(output)
-        out.write(output)
+
+        begin_idx = prev_out.find(token)
+        end_idx = prev_out.find(token+"_END")
+        print("KUK", begin_idx, end_idx, output)
+        if begin_idx != -1 and end_idx != -1:
+            new_out = (
+                    prev_out[:begin_idx+len(token)]
+                    + "\n" 
+                    + output 
+                    + "\n"
+                    + prev_out[end_idx:] 
+            )
+                
+        else: 
+            new_out = prev_out.replace(token, token + "\n" + output)
+        
+        out.write(new_out)
         out.close()
         return output 
 
@@ -88,8 +106,8 @@ class Assembler():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input_file", type=str)
-    parser.add_argument("--out", type=str, default="a.out")
-    parser.add_argument("--pm_name", type=str, default="dm.out")
+    parser.add_argument("--out", type=str, default="out/pm.vhd")
+    parser.add_argument("--dm_name", type=str, default="out/dm.vhd")
     parser.add_argument("--bin", action="store_const", const=True, default=False)
     parser.add_argument("--debug", action="store_const", const=True, default=False)
     parser.add_argument("--debug_spec", type=str, default="")

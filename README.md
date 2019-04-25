@@ -7,7 +7,7 @@ Progress:
 
 
 ## TODO 
-* Fix so that Stack grows from high address to low
+
 
 
 [Instruction Set](https://docs.google.com/document/d/1ifDim_7zJk_YUjTFmD8vfV7TSoW3sWbZ33SN53SA7Xw/edit#heading=h.esqd8f5jqki5)
