@@ -147,6 +147,7 @@ def handle_sizes(assembler):
 
 
 def handle_instructions(assembler):
+    assembler.idx = 0
     for line in assembler.lines[:]:
         instruction = line.split()[0]
         asm = instructions[instruction].handle(assembler, line)
@@ -156,6 +157,7 @@ def handle_instructions(assembler):
 
 from assembler.data_lap import store_data_memory
 from assembler.fn_lap import register_functions, handle_functions 
+from assembler.subroutine_lap import subroutine_lap
 
 laps = [
     remove_comments_and_whitespace,
@@ -168,6 +170,7 @@ laps = [
     handle_constants,
     store_data_memory, # Has to be after constants, and before labels
     handle_constants, # Handle constants created in store_data_memory
+    subroutine_lap, # Has to be before handle_labels
     handle_labels,
     handle_sizes,
     handle_instructions,

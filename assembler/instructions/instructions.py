@@ -152,6 +152,7 @@ def mul(self, assembler, instruction, args):
     set_instruction_registers(instruction, registers, OPCODE_LENGTH)
     return instruction
 
+    
 
 def jmp(self, assembler, instruction, args):
     jmp_label = args[1]
