@@ -80,7 +80,7 @@ class Assembler():
         out = open(name, "w+")
         beginning = '"' if self.opt.bin else 'X"'
         output = [beginning + line + '"' for line in values]
-        output = ",\n".join(output)
+        output = ",\n".join(output) + "," if len(output) > 0 else "" # Trailing comma for others
 
         begin_idx = prev_out.find(token)
         end_idx = prev_out.find(token+"_END")
