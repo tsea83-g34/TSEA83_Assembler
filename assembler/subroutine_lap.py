@@ -1,5 +1,5 @@
 
-ADDRESS_REGISTER = "r9"
+ADDRESS_REGISTER = "r13"
 IDX_PLACEHOLDER = "$$IDX$$"
 PLACEHOLDER_OFFSET = 3 # Relative offset it should jump to on `ret`
 
@@ -13,9 +13,12 @@ def subroutine_lap(assembler):
             lines += insert_ret(assembler, line)
         else:
             lines.append(line)
-    lines = insert_indexes(lines)
     assembler.lines = lines
 
+def insert_subroutine_indexes(assembler):
+    """ Has to be done after handle_labels, because some lines are
+    removed there. """
+    assembler.lines = insert_indexes(assembler.lines)
 
 
 def insert_call(assembler, line):
@@ -30,6 +33,7 @@ def insert_ret(assembler, line):
     lines.append("pop {}".format(ADDRESS_REGISTER))
     lines.append("jmpreg {}".format(ADDRESS_REGISTER)) # Stupid work around, have to fix jmpreg (now it goes to jmp)
     return lines
+
 
 def insert_indexes(lines):
     new_lines = []

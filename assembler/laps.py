@@ -157,7 +157,7 @@ def handle_instructions(assembler):
 
 from assembler.data_lap import store_data_memory
 from assembler.fn_lap import register_functions, handle_functions 
-from assembler.subroutine_lap import subroutine_lap
+from assembler.subroutine_lap import subroutine_lap, insert_subroutine_indexes
 
 laps = [
     remove_comments_and_whitespace,
@@ -172,6 +172,7 @@ laps = [
     handle_constants, # Handle constants created in store_data_memory
     subroutine_lap, # Has to be before handle_labels
     handle_labels,
+    insert_subroutine_indexes,
     handle_sizes,
     handle_instructions,
 ]
