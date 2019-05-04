@@ -1,6 +1,9 @@
 from assembler.macro import Macro
 from assembler.instructions.instructions import instructions 
 
+ZERO_REG = "r14"
+SP = "r15"
+
 ## EXPANDING
 def remove_comments_and_whitespace(assembler):
     idx = 0
@@ -155,6 +158,31 @@ def handle_instructions(assembler):
         assembler.idx += 1 # Needed by `assembler.add_instruction` in next pass
 
 
+def replace_pop_push(assembler):
+    """ pop r15 [4]"""
+    lines = [] 
+    for line in assembler.lines:
+        args = line.split() 
+        if args[0] == "pop" :
+            lines.append("load {}, {}, 0 {}".format(
+                args[1],
+                SP,
+                "" if len(args) < 3 else args[2], # Size (optional)
+            ))
+            lines.append("addi {}, {}, 1".format(SP, SP))
+        elif args[0] == "push" :
+            lines.append("store {}, {}, 0 {}".format(
+                SP,
+                args[1],
+                "" if len(args) < 3 else args[2], # Size (optional)
+            ))
+            lines.append("addi {}, {}, -1".format(SP, SP))
+        else:
+            lines.append(line)
+    assembler.lines = lines
+            
+
+
 from assembler.data_lap import store_data_memory
 from assembler.fn_lap import register_functions, handle_functions 
 from assembler.subroutine_lap import subroutine_lap, insert_subroutine_indexes
@@ -167,13 +195,15 @@ laps = [
     register_functions,
     handle_functions, 
     register_constants,
+    store_data_memory,
     handle_constants,
-    store_data_memory, # Has to be after constants, and before labels
-    handle_constants, # Handle constants created in store_data_memory
+    handle_sizes, # Pre pop push
+    replace_pop_push,
     subroutine_lap, # Has to be before handle_labels
+    replace_pop_push, # Again to handle subroutine push/pop
     handle_labels,
     insert_subroutine_indexes,
-    handle_sizes,
+    handle_sizes, # To clean up inserted instructions TODO: Maybe unnecessary
     handle_instructions,
 ]
 

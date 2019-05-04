@@ -11,36 +11,36 @@ const tile_idx r6
 
 # COMMENT
 
-jmp MAIN
+rjmp MAIN
 
 PRINT_BACKSPACE:
     subi tile_idx, tile_idx, 1
-    store r0, tile_idx, VGA
-    jmp MAIN
+    store tile_idx, r0, VGA
+    rjmp MAIN
 
 PRINT_CHAR: 
     
     cmpi KEY, BACKSPACE 
     breq PRINT_BACKSPACE
 
-    store KEY, tile_idx, VGA
+    store tile_idx, KEY, VGA
     subi FLAGS, FLAGS, KEY_IDX  
     addi tile_idx, tile_idx, 1
-    jmp MAIN
+    rjmp MAIN
 
 
 CHECK_KEY_DOWN:
     movlo r1, KEY_IDX
-    and r1, FLAG, r1
+    and r1, FLAGS, r1
     cmpi r1, 1 
-    brg PRINT_CHAR  
-    jmp MAIN
+    brgt PRINT_CHAR  
+    rjmp MAIN
 
 
 
 
 MAIN:
-    jmp CHECK_KEY_DOWN
+    rjmp CHECK_KEY_DOWN
 
 
 
