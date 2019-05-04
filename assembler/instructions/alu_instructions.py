@@ -40,6 +40,10 @@ Instruction("mul", 0b101001, chain(
     fetch_registers(3)
 ))
 
+Instruction("umul", 0b101010, chain(
+    fetch_registers(3)
+))
+
 Instruction("cmp", 0b110111, chain(
     fetch_registers(2, 11)
 ))

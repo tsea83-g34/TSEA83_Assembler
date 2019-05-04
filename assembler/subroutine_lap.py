@@ -25,13 +25,13 @@ def insert_call(assembler, line):
     lines = []
     lines.append("movlo {} {}".format(ADDRESS_REGISTER, IDX_PLACEHOLDER))
     lines.append("push {}".format(ADDRESS_REGISTER))
-    lines.append(line.replace("call", "jmp"))
+    lines.append(line.replace("call", "rjmp"))
     return lines
 
 def insert_ret(assembler, line):
     lines = []
     lines.append("pop {}".format(ADDRESS_REGISTER))
-    lines.append("jmpreg {}".format(ADDRESS_REGISTER)) # Stupid work around, have to fix jmpreg (now it goes to jmp)
+    lines.append("rjmprg {}".format(ADDRESS_REGISTER)) # Stupid work around, have to fix jmpreg (now it goes to jmp)
     return lines
 
 

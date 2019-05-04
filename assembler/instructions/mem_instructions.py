@@ -25,12 +25,12 @@ Instruction("mov", 0b110011, chain(
     fetch_registers(2),
 ))
 
-Instruction("movlo", 0x5, chain(
+Instruction("movlo", 0b001111, chain(
     fetch_registers(2),
     fetch_immediate(2),
 ))
 
-Instruction("movhi", 0x6, chain(
+Instruction("movhi", 0b001110, chain(
     fetch_registers(2),
     fetch_immediate(2),
 ))
@@ -48,10 +48,16 @@ Instruction("pop", 0b000010, chain(
 
 
 Instruction("in", 0b000011, chain(
-    fetch_immediate(1, length=5, ir_idx=6),
-    fetch_registers(1, dest_start_index=11, args_idx=2)
+    fetch_registers(1, dest_start_index=8, args_idx=2),
+    fetch_immediate(2, length=4, ir_idx=12),
 ))
-Instruction("out", 0b000011, chain( # Didn't find any "OUT" encodingf so same as "IN"
-    fetch_immediate(1, length=5, ir_idx=6),
-    fetch_registers(1, dest_start_index=11, args_idx=2)
+
+Instruction("out", 0b111001, chain( # Didn't find any "OUT" encodingf so same as "IN"
+    fetch_immediate(1, length=4, ir_idx=8),
+    fetch_registers(1, dest_start_index=12, args_idx=2)
+))
+
+Instruction("vgawrt", 0b111010, chain( # Didn't find any "OUT" encodingf so same as "IN"
+    fetch_registers(2, dest_start_index=8, args_idx=2),
+    fetch_immediate(4),
 ))

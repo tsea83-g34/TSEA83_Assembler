@@ -84,7 +84,6 @@ class Assembler():
 
         begin_idx = prev_out.find(token)
         end_idx = prev_out.find(token+"_END")
-        print("KUK", begin_idx, end_idx, output)
         if begin_idx != -1 and end_idx != -1:
             new_out = (
                     prev_out[:begin_idx+len(token)]
