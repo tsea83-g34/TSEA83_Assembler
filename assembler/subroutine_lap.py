@@ -1,7 +1,9 @@
 
 ADDRESS_REGISTER = "r13"
-IDX_PLACEHOLDER = "$$IDX$$"
-PLACEHOLDER_OFFSET = 3 # Relative offset it should jump to on `ret`
+CALL_IDX_PLACEHOLDER = "$$CALL_IDX$$"
+CALL_PLACEHOLDER_OFFSET = 4 
+RET_IDX_PLACEHOLDER = "$$RET_IDX$$"
+RET_PLACEHOLDER_OFFSET = 1
 
 
 def subroutine_lap(assembler):
@@ -23,7 +25,7 @@ def insert_subroutine_indexes(assembler):
 
 def insert_call(assembler, line):
     lines = []
-    lines.append("movlo {} {}".format(ADDRESS_REGISTER, IDX_PLACEHOLDER))
+    lines.append("movlo {} {}".format(ADDRESS_REGISTER, CALL_IDX_PLACEHOLDER))
     lines.append("push {}".format(ADDRESS_REGISTER))
     lines.append(line.replace("call", "rjmp"))
     return lines
@@ -31,6 +33,7 @@ def insert_call(assembler, line):
 def insert_ret(assembler, line):
     lines = []
     lines.append("pop {}".format(ADDRESS_REGISTER))
+    lines.append("subi {} {} {}".format(ADDRESS_REGISTER, ADDRESS_REGISTER, RET_IDX_PLACEHOLDER))
     lines.append("rjmprg {}".format(ADDRESS_REGISTER)) # Stupid work around, have to fix jmpreg (now it goes to jmp)
     return lines
 
@@ -38,6 +41,10 @@ def insert_ret(assembler, line):
 def insert_indexes(lines):
     new_lines = []
     for idx, line in enumerate(lines):
-        absolute_idx = str(idx + PLACEHOLDER_OFFSET)
-        new_lines.append(line.replace(IDX_PLACEHOLDER, absolute_idx))
+        call_absolute_idx = str(idx + CALL_PLACEHOLDER_OFFSET)
+        ret_absolute_idx = str(idx + RET_PLACEHOLDER_OFFSET)
+        line = line.replace(CALL_IDX_PLACEHOLDER, call_absolute_idx)
+        line = line.replace(RET_IDX_PLACEHOLDER, ret_absolute_idx)
+        new_lines.append(line)
+
     return new_lines

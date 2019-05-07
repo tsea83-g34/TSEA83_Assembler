@@ -25,12 +25,12 @@ Instruction("mov", 0b110011, chain(
     fetch_registers(2),
 ))
 
-Instruction("movlo", 0b001111, chain(
+Instruction("movlo", 0b111101, chain(
     fetch_registers(1),
     fetch_immediate(2),
 ))
 
-Instruction("movhi", 0b001110, chain(
+Instruction("movhi", 0b111100, chain(
     fetch_registers(1),
     fetch_immediate(2),
 ))
