@@ -9,7 +9,7 @@ RET_PLACEHOLDER_OFFSET = 1
 def subroutine_lap(assembler):
     lines = []
     for line in assembler.lines:
-        if line.find("call") != -1:
+        if line.find("call") != -1: 
             lines += insert_call(assembler, line)
         elif line.find("ret") != -1:
             lines += insert_ret(assembler, line)
