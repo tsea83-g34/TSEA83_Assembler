@@ -164,19 +164,21 @@ def replace_pop_push(assembler):
     for line in assembler.lines:
         args = line.split() 
         if args[0] == "pop" :
+            size = 1 if len(args) < 3 else eval(args[2].replace("[", "").replace("]", ""))
             lines.append("load {}, {}, 0 {}".format(
                 args[1],
                 SP,
                 "" if len(args) < 3 else args[2], # Size (optional)
             ))
-            lines.append("addi {}, {}, 1".format(SP, SP))
+            lines.append("addi {}, {}, {}".format(SP, SP, size))
         elif args[0] == "push" :
+            size = 1 if len(args) < 3 else eval(args[2].replace("[", "").replace("]", ""))
+            lines.append("addi {}, {}, {}".format(SP, SP, -size))
             lines.append("store {}, {}, 0 {}".format(
                 SP,
                 args[1],
                 "" if len(args) < 3 else args[2], # Size (optional)
             ))
-            lines.append("addi {}, {}, -1".format(SP, SP))
         else:
             lines.append(line)
     assembler.lines = lines

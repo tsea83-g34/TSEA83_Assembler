@@ -6,4 +6,5 @@
 .data VARIABLES
 .dw 0x1234fedc ; 32 bits 
 .db 20: 0xfd
-load r1, r0, VARIABLES 
+load r1, r0, VARIABLES
+addi r0, r14, VARIABLES

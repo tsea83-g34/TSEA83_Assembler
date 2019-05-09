@@ -21,7 +21,7 @@ Instruction("store_pm", 0b110101, chain(
     fetch_immediate(3),
 ))
 
-Instruction("mov", 0b110011, chain(
+Instruction("move", 0b110011, chain(
     fetch_registers(2),
 ))
 
@@ -57,7 +57,7 @@ Instruction("out", 0b111001, chain( # Didn't find any "OUT" encodingf so same as
     fetch_registers(1, dest_start_index=12, args_idx=2)
 ))
 
-Instruction("vgawrt", 0b111010, chain( # Didn't find any "OUT" encodingf so same as "IN"
+Instruction("store_vga", 0b111010, chain( # Didn't find any "OUT" encodingf so same as "IN"
     fetch_registers(2, dest_start_index=8, args_idx=2),
     fetch_immediate(4),
 ))
