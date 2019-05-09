@@ -51,7 +51,7 @@ class Assembler():
         return res 
         
     def add_debug(self, seq):
-        return [self.final_lines[i] + ": " + seq[i] for i in range(len(seq))]
+        return [seq[i] + ", -- " + self.final_lines[i] for i in range(len(seq))]
 
     
     def assemble(self, out_file, only_preprocess=True):
@@ -79,8 +79,8 @@ class Assembler():
             prev_out = file.read()
         out = open(name, "w+")
         beginning = '"' if self.opt.bin else 'X"'
-        output = [beginning + line + '"' for line in values]
-        output = ",\n".join(output) + "," if len(output) > 0 else "" # Trailing comma for others
+        output = [beginning + line.replace(",", '",') for line in values]
+        output = "\n".join(output) + "," if len(output) > 0 else "" # Trailing comma for others
 
         begin_idx = prev_out.find(token)
         end_idx = prev_out.find(token+"_END")
