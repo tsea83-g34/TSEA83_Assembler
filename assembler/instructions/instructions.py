@@ -91,7 +91,11 @@ class Instruction:
         instruction = ["0"]*32 
         instruction[:OPCODE_LENGTH] = self.opcode_bin 
         instruction[OPCODE_LENGTH:OPCODE_LENGTH + 2] = "11" # Default is 32 bits
-        res = self.handler(self, assembler, instruction, args)
+        res = []
+        try:
+            res = self.handler(self, assembler, instruction, args)
+        except:
+            print(line)
         return "".join(res)
 
 
