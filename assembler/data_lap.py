@@ -51,6 +51,12 @@ class Data:
     def __lt__ (self, other):
         return self.addr < other.addr
 
+    def __str__(self):
+        return "Cmd: {}, val: {}, addr: {}, vals: {}".format(
+            self.cmd, self.val, self.addr, [hex(int(val, 2)) for val in self.vals],
+        )
+
+
 def get_max_addr (data_list):
     max_addr = -1 
     for data in data_list:
@@ -79,7 +85,14 @@ def store_data_memory(assembler):
                 # adds .data labels as well
                 
                 val = args[1]
-                inc_addresses.append(Data(cmd, val, addr))
+                data = Data(cmd, val, addr)
+                if cmd == ".ds": # Split it up into chars
+                    Data.idx -= len(data.vals) # Shitty solution for chunks
+                    data.val += "\0"
+                    for char in data.val:
+                        inc_addresses.append(Data(".dc", char, None))
+                else:
+                    inc_addresses.append(data)
         else:
             lines.append(line)
     assembler.lines = lines
@@ -95,11 +108,18 @@ def store_data_memory(assembler):
         data_memory[data.addr: data.addr+data.size] = data.vals 
     
     idx = 0
+    chunk_idx = 0
     for data in inc_addresses:
         if data.cmd == ".data":
             assembler.constants[data.val] = str(idx)
             continue
+        print("DATA: ", data)
+        if 4 - chunk_idx < data.size:
+            idx += (4-chunk_idx)
+            chunk_idx = 0
+            print(data.size, idx)
         data_memory[idx: idx+data.size] = data.vals 
+        chunk_idx = (chunk_idx + data.size) % 4
         idx += data.size 
     assembler.data_memory = data_memory
     

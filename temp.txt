@@ -1,34 +1,230 @@
-.ds "hello"
-.db 0xff
-.dh 0xaaaa
-.data VARIABLES
-.dw 0x1234fedc
-.db 20: 0xfd
-load r1, r0, VARIABLES
-addi r0, r14, VARIABLES
-['68,', '65,', '6c,', '6c,', '6f,', '00,', 'ff,', 'aa,', 'aa,', 'dc,', 'fe,', '34,', '12,', '00,', '00,', '00,', '00,', '00,', '00,', '00,', 'fd,']
+addi r1, r1, 1
+addi r2, r2, 2
+addi r3, r3, 3
+store[4] r3, r3, 0
+load[4] r5, r3, 0
+ADD_r5:
+addi r5, r5, 1
+cmpi r5, 5
+brne ADD_r5
+addi r10, r10, 0xfedc
+store[1] r0, r10, 10
+load[1] r10, r0, 10
+call SUBROUTINE
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+SUBROUTINE:
+ret
+[]
+mem := (
+--$PROGRAM
+X"8b110001", -- addi r1 r1 1
+X"8b220002", -- addi r2 r2 2
+X"8b330003", -- addi r3 r3 3
+X"d3330000", -- store r3 r3 0 [4]
+X"83530000", -- load r5 r3 0 [4]
+X"8b550001", -- addi r5 r5 1
+X"e3050005", -- cmpi r5 5
+X"1f00fffe", -- brne ADD_r5
+X"8baafedc", -- addi r10 r10 0xfedc
+X"d00a000a", -- store r0 r10 10 [1]
+X"80a0000a", -- load r10 r0 10 [1]
+X"f7d0000f", -- movlo r13 15
+X"8bffffff", -- addi r15 r15 -1
+X"d3fd0000", -- store r15 r13 0
+X"3300000d", -- rjmp SUBROUTINE
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"83df0000", -- load r13 r15 0
+X"8bff0001", -- addi r15 r15 1
+X"8fdd001e", -- subi r13 r13 30
+X"efd00000", -- rjmprg r13
+--$PROGRAM_END
+others => X"00000000"
+);
 PM RES:
-X"83100009", -- load r1 r0 9
-X"8b0e0009", -- addi r0 r14 9,
-DM Res:
-X"68",
+X"8b110001", -- addi r1 r1 1
+X"8b220002", -- addi r2 r2 2
+X"8b330003", -- addi r3 r3 3
+X"d3330000", -- store r3 r3 0 [4]
+X"83530000", -- load r5 r3 0 [4]
+X"8b550001", -- addi r5 r5 1
+X"e3050005", -- cmpi r5 5
+X"1f00fffe", -- brne ADD_r5
+X"8baafedc", -- addi r10 r10 0xfedc
+X"d00a000a", -- store r0 r10 10 [1]
+X"80a0000a", -- load r10 r0 10 [1]
+X"f7d0000f", -- movlo r13 15
+X"8bffffff", -- addi r15 r15 -1
+X"d3fd0000", -- store r15 r13 0
+X"3300000d", -- rjmp SUBROUTINE
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"03000000", -- nop
+X"83df0000", -- load r13 r15 0
+X"8bff0001", -- addi r15 r15 1
+X"8fdd001e", -- subi r13 r13 30
+X"efd00000", -- rjmprg r13
+mem1 := (
+--$DATA1
+
+--$DATA1_END
+others => X"00"
+)
+
+mem2 := (
+--$DATA2
 X"65",
-X"6c",
-X"6c",
-X"6f",
 X"00",
-X"ff",
 X"aa",
-X"aa",
-X"dc",
 X"fe",
+X"00",
+--$DATA2_END
+others => X"00"
+)
+
+mem3 := (
+--$DATA3
+X"6c",
+X"ff",
+X"00",
 X"34",
+X"00",
+--$DATA3_END
+others => X"00"
+)
+
+mem4 := (
+--$DATA4
+X"6c",
+X"00",
+X"00",
 X"12",
 X"00",
+--$DATA4_END
+others => X"00"
+)
+mem1 := (
+--$DATA1
+
+--$DATA1_END
+others => X"00"
+)
+
+mem2 := (
+--$DATA2
+
+--$DATA2_END
+others => X"00"
+)
+
+mem3 := (
+--$DATA3
+X"6c",
+X"ff",
+X"00",
+X"34",
+X"00",
+--$DATA3_END
+others => X"00"
+)
+
+mem4 := (
+--$DATA4
+X"6c",
 X"00",
 X"00",
+X"12",
+X"00",
+--$DATA4_END
+others => X"00"
+)
+mem1 := (
+--$DATA1
+
+--$DATA1_END
+others => X"00"
+)
+
+mem2 := (
+--$DATA2
+
+--$DATA2_END
+others => X"00"
+)
+
+mem3 := (
+--$DATA3
+
+--$DATA3_END
+others => X"00"
+)
+
+mem4 := (
+--$DATA4
+X"6c",
 X"00",
 X"00",
+X"12",
 X"00",
-X"00",
-X"fd",,
+--$DATA4_END
+others => X"00"
+)
+mem1 := (
+--$DATA1
+
+--$DATA1_END
+others => X"00"
+)
+
+mem2 := (
+--$DATA2
+
+--$DATA2_END
+others => X"00"
+)
+
+mem3 := (
+--$DATA3
+
+--$DATA3_END
+others => X"00"
+)
+
+mem4 := (
+--$DATA4
+
+--$DATA4_END
+others => X"00"
+)
+DM Res:
+
