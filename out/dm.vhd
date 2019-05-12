@@ -1,13 +1,13 @@
 mem1 := (
 --$DATA1
-
+X"00",
 --$DATA1_END
 others => X"00"
 )
 
 mem2 := (
 --$DATA2
-
+X"10",
 --$DATA2_END
 others => X"00"
 )

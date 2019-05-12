@@ -58,4 +58,5 @@ Instruction("out", 0b111001, chain( # Didn't find any "OUT" encodingf so same as
 
 Instruction("vgaw", 0b111010, chain( # Didn't find any "OUT" encodingf so same as "IN"
     fetch_registers(2, dest_start_index=8, args_idx=1),
+    fetch_immediate(3),
 ))
