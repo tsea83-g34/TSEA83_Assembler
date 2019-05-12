@@ -1,5 +1,6 @@
 from assembler.instructions.instructions import Instruction, fetch_registers, fetch_immediate, chain, fetch_size
 
+Instruction("nop", 0, chain())
 
 # load word
 Instruction("load", 0b100000 , chain(

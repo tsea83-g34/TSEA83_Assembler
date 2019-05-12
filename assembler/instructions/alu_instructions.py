@@ -45,12 +45,17 @@ Instruction("umul", 0b101010, chain(
 ))
 
 Instruction("cmp", 0b110111, chain(
-    fetch_registers(2, 11)
+    fetch_registers(2, 12)
 ))
 
+def debug_cmpi (self, assembler, instruction, args):
+    print("CMPI:", args, instruction)
+    return instruction
+
 Instruction("cmpi", 0b111000, chain(
-    fetch_registers(1, 11),
-    fetch_immediate(2)
+    fetch_registers(1, 12),
+    fetch_immediate(2),
+    #debug_cmpi,
 ))
 
 Instruction("neg", 0b100110, chain(
