@@ -20,7 +20,7 @@ X"00",
 X"00",
 X"00",
 X"00",
-X"fd",,
+X"fd",
 --$DATA_END
 others => X"00"
 )

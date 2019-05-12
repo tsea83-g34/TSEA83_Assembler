@@ -57,7 +57,7 @@ class Assembler():
         self.data_memory = [line + "," for line in self.data_memory]
 
     
-    def assemble(self, out_file, only_preprocess=True):
+    def assemble(self):
 
         for lap in laps:
             lap(self) # Do a lap and modify the code
@@ -73,7 +73,7 @@ class Assembler():
         self.res = self.add_debug(self.res)
         self.add_data_debug()
         print(self.data_memory)
-        print("PM RES:\n" + self.write_file(out_file, self.res, "--$PROGRAM"))
+        print("PM RES:\n" + self.write_file(self.opt.out, self.res, "--$PROGRAM"))
         dm_res = self.write_file(self.opt.dm_name, self.data_memory, "--$DATA")
         print("DM Res:\n"+dm_res)
     
@@ -83,7 +83,7 @@ class Assembler():
         out = open(name, "w+")
         beginning = '"' if self.opt.bin else 'X"'
         output = [beginning + line.replace(",", '",') for line in values]
-        output = "\n".join(output) + "," if len(output) > 0 else "" # Trailing comma for others
+        output = "\n".join(output) # Trailing comma for others
 
         begin_idx = prev_out.find(token)
         end_idx = prev_out.find(token+"_END")
@@ -116,10 +116,12 @@ def main():
     opt = parser.parse_args()
     #print(opt)
     path = os.getcwd()
+    opt.out = path + os.sep + opt.out 
+    opt.dm_name = path + os.sep + opt.dm_name
     file_name = opt.input_file
     file_path = os.getcwd() + os.sep + file_name 
     assembler = Assembler(file_path, opt)
-    assembler.assemble(path + os.sep + opt.out)
+    assembler.assemble()
 
 if __name__ == "__main__":
     main()
