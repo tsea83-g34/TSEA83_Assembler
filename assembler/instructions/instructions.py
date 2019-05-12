@@ -95,7 +95,7 @@ class Instruction:
         try:
             res = self.handler(self, assembler, instruction, args)
         except:
-            print(line)
+            print("EXCEPTION", line, args)
         return "".join(res)
 
 

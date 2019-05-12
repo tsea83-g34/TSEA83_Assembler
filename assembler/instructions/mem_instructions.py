@@ -27,13 +27,13 @@ Instruction("move", 0b110011, chain(
 ))
 
 Instruction("movlo", 0b111101, chain(
-    fetch_registers(1),
-    fetch_immediate(2),
+    fetch_registers(2),
+    fetch_immediate(3),
 ))
 
 Instruction("movhi", 0b111100, chain(
-    fetch_registers(1),
-    fetch_immediate(2),
+    fetch_registers(2),
+    fetch_immediate(3),
 ))
 
 Instruction("push", 0b110110, chain(
