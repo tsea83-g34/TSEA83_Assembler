@@ -53,6 +53,9 @@ class Assembler():
     def add_debug(self, seq):
         return [seq[i] + ", -- " + self.final_lines[i] for i in range(len(seq))]
 
+    def add_data_debug(self):
+        self.data_memory = [line + "," for line in self.data_memory]
+
     
     def assemble(self, out_file, only_preprocess=True):
 
@@ -67,9 +70,9 @@ class Assembler():
             self.res = self.bin_to_hex(self.res)
             self.data_memory = self.bin_to_hex(self.data_memory, 8)
 
-        if self.opt.debug:
-            self.res = self.add_debug(self.res)
-
+        self.res = self.add_debug(self.res)
+        self.add_data_debug()
+        print(self.data_memory)
         print("PM RES:\n" + self.write_file(out_file, self.res, "--$PROGRAM"))
         dm_res = self.write_file(self.opt.dm_name, self.data_memory, "--$DATA")
         print("DM Res:\n"+dm_res)
