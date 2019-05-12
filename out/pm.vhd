@@ -30,7 +30,7 @@ X"03000000", -- nop
 X"83df0000", -- load r13 r15 0
 X"8bff0001", -- addi r15 r15 1
 X"8fdd001e", -- subi r13 r13 30
-X"efd00000", -- rjmprg r13
+X"ef0d0000", -- rjmprg r13
 --$PROGRAM_END
 others => X"00000000"
 );

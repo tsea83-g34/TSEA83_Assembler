@@ -7,7 +7,7 @@ Instruction("ret", 0b00100, chain())
 
 Instruction("rjmp", 0b001100, jmp)
 Instruction("rjmprg", 0b111011, chain(
-    fetch_registers(1),
+    fetch_registers(1, dest_start_index=12),
 ))
 
 Instruction("breq", 0b000110, jmp)
