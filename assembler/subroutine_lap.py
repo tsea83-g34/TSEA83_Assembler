@@ -1,7 +1,7 @@
 
 ADDRESS_REGISTER = "r13"
 CALL_IDX_PLACEHOLDER = "$$CALL_IDX$$"
-CALL_PLACEHOLDER_OFFSET = 4 
+CALL_PLACEHOLDER_OFFSET = 3 # Changed this 
 RET_IDX_PLACEHOLDER = "$$RET_IDX$$"
 RET_PLACEHOLDER_OFFSET = 1
 
@@ -25,7 +25,7 @@ def insert_subroutine_indexes(assembler):
 
 def insert_call(assembler, line):
     lines = []
-    lines.append("movlo {} {}".format(ADDRESS_REGISTER, CALL_IDX_PLACEHOLDER))
+    lines.append("movlo {} {} {}".format(ADDRESS_REGISTER, ADDRESS_REGISTER, CALL_IDX_PLACEHOLDER))
     lines.append("push {}".format(ADDRESS_REGISTER))
     lines.append(line.replace("call", "rjmp"))
     return lines
