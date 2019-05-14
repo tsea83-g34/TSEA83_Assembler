@@ -75,13 +75,9 @@ class Assembler():
 
         self.res = self.add_debug(self.res)
         self.add_data_debug()
-        print(self.data_memory)
-        print("PM RES:\n" + self.write_file(self.opt.out, self.res, "--$PROGRAM"))
         for i in range(4):
             chunk = [self.data_memory[i] for i in range(i, len(self.data_memory), 4)]
             dm_res = self.write_file(self.opt.dm_name, chunk, "--$DATA{}".format(i+1))
-        
-        print("DM Res:\n"+dm_res)
     
     def write_file(self, name, values, token="--$PROGRAM"):
         with open(name) as file:
@@ -104,7 +100,6 @@ class Assembler():
                 
         else: 
             new_out = prev_out.replace(token, token + "\n" + output)
-        print(new_out)
         out.write(new_out)
         out.close()
         return output 

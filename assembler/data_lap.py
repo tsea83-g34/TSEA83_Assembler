@@ -113,11 +113,9 @@ def store_data_memory(assembler):
         if data.cmd == ".data":
             assembler.constants[data.val] = str(idx)
             continue
-        print("DATA: ", data)
         if 4 - chunk_idx < data.size:
             idx += (4-chunk_idx)
             chunk_idx = 0
-            print(data.size, idx)
         data_memory[idx: idx+data.size] = data.vals 
         chunk_idx = (chunk_idx + data.size) % 4
         idx += data.size 

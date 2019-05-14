@@ -6,8 +6,6 @@ class Macro:
         self.lines = []
 
     def handle_macro(self, assembler, line):
-        if assembler.opt.debug:
-            print("HANDLE MACRO: ", line)
         args = line.split()[1:]
         args = [arg.strip().replace(",", "") for arg in args]   # inc r1
         if len(args) != self.num_args:

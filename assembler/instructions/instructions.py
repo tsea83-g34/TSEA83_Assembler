@@ -58,10 +58,19 @@ def fetch_immediate(arg_idx, length=16, ir_idx=16):
 
 def fetch_size(dest=6):
     def anon(self, assembler, instruction, args):
-        size = 4 
+        size = -1
         if args[-1].find("[") != -1:
             size = eval(args[-1].replace("[", "").replace("]", ""))
-        encoding = 3 if size == 4 else size
+
+        if size not in [1, 2, 4]:
+            raise Exception("Unrecognized size for instruction:")
+
+        encoding = 0 # The instruction size encoding
+        if size == 1 or size == 2:
+            encoding = size 
+        elif size == 4:
+            encoding = 3 
+
         instruction[dest:dest+2] = int_to_bin_fill(encoding, 2)
         return instruction
     return anon
@@ -77,7 +86,6 @@ class Instruction:
     def __init__(self, name, opcode, handler):
         self.opcode = opcode 
         self.opcode_bin = int_to_bin_fill(opcode, OPCODE_LENGTH)
-        #print("OPCODE CONTRL: ", self.opcode_bin, name)
         self.name = name
         self.handler = handler
         instructions[name] = self 
@@ -96,7 +104,7 @@ class Instruction:
         try:
             res = self.handler(self, assembler, instruction, args)
         except Exception as e:
-            print("EXCEPTION", line, args, e)
+            raise Exception("Exception on line {} out of {}:".format(assembler.idx+1, len(assembler.lines)), e, line, args, )
         return "".join(res)
 
 

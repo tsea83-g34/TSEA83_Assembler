@@ -49,7 +49,6 @@ def register_functions(assembler):
             continue
 
         lines.append(line)
-    print("\n".join(lines))
     assembler.lines = lines
 
 def func_init_lines(args):
