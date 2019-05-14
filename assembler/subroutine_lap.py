@@ -26,13 +26,13 @@ def insert_subroutine_indexes(assembler):
 def insert_call(assembler, line):
     lines = []
     lines.append("movlo {} {} {}".format(ADDRESS_REGISTER, ADDRESS_REGISTER, CALL_IDX_PLACEHOLDER))
-    lines.append("push {}".format(ADDRESS_REGISTER))
+    lines.append("push {} [2]".format(ADDRESS_REGISTER))
     lines.append(line.replace("call", "rjmp"))
     return lines
 
 def insert_ret(assembler, line):
     lines = []
-    lines.append("pop {}".format(ADDRESS_REGISTER))
+    lines.append("pop {} [2]".format(ADDRESS_REGISTER))
     lines.append("subi {} {} {}".format(ADDRESS_REGISTER, ADDRESS_REGISTER, RET_IDX_PLACEHOLDER))
     lines.append("rjmprg {}".format(ADDRESS_REGISTER)) # Stupid work around, have to fix jmpreg (now it goes to jmp)
     return lines
