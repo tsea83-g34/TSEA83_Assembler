@@ -51,7 +51,10 @@ class Assembler():
         return res 
         
     def add_debug(self, seq):
-        return [seq[i] + ", -- " + self.final_lines[i] for i in range(len(seq))]
+        pm = [seq[i] + ", -- " + self.final_lines[i] for i in range(len(seq))]
+        for label, idx in self.labels.items():
+            pm[idx] += " [{}]".format(label)
+        return pm
 
     def add_data_debug(self):
         self.data_memory = [line + "," for line in self.data_memory]
