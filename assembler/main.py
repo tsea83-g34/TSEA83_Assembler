@@ -75,6 +75,7 @@ class Assembler():
 
         self.res = self.add_debug(self.res)
         self.add_data_debug()
+        self.write_file(self.opt.out, self.res, "--$PROGRAM")
         for i in range(4):
             chunk = [self.data_memory[i] for i in range(i, len(self.data_memory), 4)]
             dm_res = self.write_file(self.opt.dm_name, chunk, "--$DATA{}".format(i+1))
