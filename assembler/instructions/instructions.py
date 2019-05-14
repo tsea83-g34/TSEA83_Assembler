@@ -94,8 +94,8 @@ class Instruction:
         res = []
         try:
             res = self.handler(self, assembler, instruction, args)
-        except:
-            print("EXCEPTION", line, args)
+        except Exception as e:
+            print("EXCEPTION", line, args, e)
         return "".join(res)
 
 
@@ -160,9 +160,12 @@ def mul(self, assembler, instruction, args):
 
 def jmp(self, assembler, instruction, args):
     jmp_label = args[1]
-    if jmp_label not in assembler.labels:
-        raise KeyError("Such a label does not exist for jump/branch: {}".format(jmp_label))
-    jmp_offset = assembler.labels[jmp_label] - assembler.idx
+    if jmp_label not in assembler.labels: 
+        jmp_offset = eval(jmp_label) # Immediate
+        #raise KeyError("Such a label does not exist for jump/branch: {}".format(jmp_label))
+    else:
+        jmp_offset = assembler.labels[jmp_label] - assembler.idx
+        
     if assembler.opt.debug_spec == "jmp":     
         print("JMP to ", args[1], "offset:", jmp_offset)
 

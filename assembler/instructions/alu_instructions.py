@@ -1,4 +1,4 @@
-from assembler.instructions.instructions import Instruction, fetch_registers, fetch_immediate, chain 
+from assembler.instructions.instructions import Instruction, fetch_registers, fetch_immediate, chain, fetch_size
 
 ## LOGICAL
 Instruction("and", 0b101111, chain(
@@ -14,7 +14,7 @@ Instruction("or", 0b110000, chain(
 ))
 
 Instruction("not", 0b110010, chain(
-    fetch_registers(3),
+    fetch_registers(2),
 ))
 
 # ARITHMETIC
@@ -40,9 +40,6 @@ Instruction("mul", 0b101001, chain(
     fetch_registers(3)
 ))
 
-Instruction("umul", 0b101010, chain(
-    fetch_registers(3)
-))
 
 Instruction("cmp", 0b110111, chain(
     fetch_registers(2, 12)
@@ -59,24 +56,26 @@ Instruction("cmpi", 0b111000, chain(
 ))
 
 Instruction("neg", 0b100110, chain(
-    fetch_registers(1)
+    fetch_registers(2)
 ))
 
 Instruction("inc", 0b100111, chain(
-    fetch_registers(1)
+    fetch_registers(2)
 ))
 
 Instruction("dec", 0b101000, chain(
-    fetch_registers(1)
+    fetch_registers(2)
 ))
 
 
 # SHIFT
 
 Instruction("lsr", 0b101100, chain(
-    fetch_registers(1),
+    fetch_size(),
+    fetch_registers(2),
 ))
 
 Instruction("lsl", 0b101011, chain(
-    fetch_registers(1),
+    fetch_size(),
+    fetch_registers(2),
 ))

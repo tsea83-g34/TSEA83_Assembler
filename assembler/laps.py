@@ -182,7 +182,17 @@ def replace_pop_push(assembler):
         else:
             lines.append(line)
     assembler.lines = lines
-            
+
+def replace_halts(assembler):
+    lines = []
+    for line in assembler.lines:
+        args = line.split()
+        if args[0] == "halt":
+            lines.append("nop")
+            lines.append("rjmp -1")
+        else:
+            lines.append(line)
+    assembler.lines = lines
 
 
 from assembler.data_lap import store_data_memory
@@ -198,6 +208,7 @@ laps = [
     handle_functions, 
     register_constants,
     store_data_memory,
+    replace_halts,
     handle_constants,
     handle_sizes, # Pre pop push
     replace_pop_push,

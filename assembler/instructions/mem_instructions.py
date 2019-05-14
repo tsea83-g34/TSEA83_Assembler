@@ -17,7 +17,6 @@ Instruction("store", 0b110100, chain(
 ))
 
 Instruction("store_pm", 0b110101, chain(
-    fetch_size(),
     fetch_registers(2),
     fetch_immediate(3),
 ))
@@ -49,14 +48,16 @@ Instruction("pop", 0b000010, chain(
 
 
 Instruction("in", 0b000011, chain(
-    fetch_registers(2, dest_start_index=8, args_idx=1),
+    fetch_registers(1, dest_start_index=8, args_idx=1),
+    fetch_immediate(2, length=4, ir_idx=12),
 ))
 
-Instruction("out", 0b111001, chain( # Didn't find any "OUT" encodingf so same as "IN"
-    fetch_registers(2, dest_start_index=8, args_idx=1)
+Instruction("out", 0b111001, chain( 
+    fetch_immediate(1, length=4, ir_idx=8),
+    fetch_registers(2, dest_start_index=12, args_idx=2)
 ))
 
-Instruction("vgaw", 0b111010, chain( # Didn't find any "OUT" encodingf so same as "IN"
+Instruction("vgaw", 0b111010, chain(
     fetch_registers(2, dest_start_index=8, args_idx=1),
     fetch_immediate(3),
 ))
