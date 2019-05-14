@@ -61,7 +61,8 @@ def fetch_size(dest=6):
         size = 4 
         if args[-1].find("[") != -1:
             size = eval(args[-1].replace("[", "").replace("]", ""))
-        instruction[dest:dest+2] = int_to_bin_fill(size-1, 2)
+        encoding = 3 if size == 4 else size
+        instruction[dest:dest+2] = int_to_bin_fill(encoding, 2)
         return instruction
     return anon
 

@@ -114,8 +114,8 @@ class Assembler():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input_file", type=str)
-    parser.add_argument("--out", type=str, default="out/pm.vhd")
-    parser.add_argument("--dm_name", type=str, default="out/dm.vhd")
+    parser.add_argument("--out", type=str, default="out/program.vhd")
+    parser.add_argument("--dm_name", type=str, default="out/data.vhd")
     parser.add_argument("--bin", action="store_const", const=True, default=False)
     parser.add_argument("--debug", action="store_const", const=True, default=False)
     parser.add_argument("--debug_spec", type=str, default="")
