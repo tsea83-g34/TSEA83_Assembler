@@ -63,20 +63,37 @@ def get_max_addr (data_list):
         max_addr = max(max_addr, data.addr+data.size)
     return max_addr
 
+
+def get_multiline_str(assembler, first_line, idx):
+    res = first_line
+    quotes_count = first_line.count('"')
+    while idx < len(assembler.lines) and quotes_count < 2:
+        res += "\n" + assembler.lines[idx]
+        quotes_count += assembler.lines[idx].count('"')
+        idx += 1 
+    return res, idx
+
+        
+
+
 def store_data_memory(assembler):
     
     abs_addresses = []
     inc_addresses = []
     # Even if should overwrite, better to seperate 
     lines = [] # Remove all .db stuff
-    
-    for line in assembler.lines:
+    idx = 0
+    while idx < len(assembler.lines):
+        line = assembler.lines[idx]
         if line.find(".d") != -1: # Unsafe and shitty
             line.replace(":", ": ") # Easier 
             args = line.split() # Also strips it
             if line.find('"') != -1: # To handle .ds
-                args = line.split('"')
-                args = [args[0].strip(), '"' + args[1] + '"'] 
+                quote_idx = line.find('"')
+                args = [line[:quote_idx], line[quote_idx:]]
+                args[0] = args[0].strip()
+                args[1], new_idx = get_multiline_str(assembler, args[1], idx + 1)
+                idx = new_idx - 1 # We always add one to idx at end of loop
             cmd = args[0]
             addr = None # Just auto inc
             if line.find(":") != -1: # Absolute address `.db 100: 0xff`
@@ -97,6 +114,7 @@ def store_data_memory(assembler):
                     inc_addresses.append(data)
         else:
             lines.append(line)
+        idx += 1
     assembler.lines = lines
     #print([str(data) for data in inc_addresses], len(inc_addresses))
 

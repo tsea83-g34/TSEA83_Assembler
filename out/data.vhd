@@ -9,34 +9,28 @@ package data_file is
   
   constant data0 : data_chunk_array := (
 --$DATA1
-X"68",
-X"6f",
-X"72",
+X"67",
+X"ff",
 --$DATA1_END
 others => X"00"
 );
   constant data1 : data_chunk_array := (
 --$DATA2
-X"65",
-X"20",
-X"6c",
+X"0a",
+X"ff",
 --$DATA2_END
 others => X"00"
 );
 
   constant data2 : data_chunk_array := (
 --$DATA3
-X"6c",
-X"77",
-X"64",
+X"67",
 --$DATA3_END
 others => X"00"
 );
 
   constant data3 : data_chunk_array := (
 --$DATA4
-X"6c",
-X"6f",
 X"00",
 --$DATA4_END
 others => X"00"
