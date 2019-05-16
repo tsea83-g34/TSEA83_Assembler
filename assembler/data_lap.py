@@ -73,9 +73,11 @@ def store_data_memory(assembler):
     for line in assembler.lines:
         if line.find(".d") != -1: # Unsafe and shitty
             line.replace(":", ": ") # Easier 
-            args = line.split() # Also strips it 
+            args = line.split() # Also strips it
+            if line.find('"') != -1: # To handle .ds
+                args = line.split('"')
+                args = [args[0].strip(), '"' + args[1] + '"'] 
             cmd = args[0]
-
             addr = None # Just auto inc
             if line.find(":") != -1: # Absolute address `.db 100: 0xff`
                 val = args[2]
@@ -96,7 +98,7 @@ def store_data_memory(assembler):
         else:
             lines.append(line)
     assembler.lines = lines
-
+    #print([str(data) for data in inc_addresses], len(inc_addresses))
 
     data_memory_size = Data.total_size
     if len(abs_addresses) > 0:
