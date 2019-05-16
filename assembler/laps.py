@@ -204,8 +204,6 @@ laps = [
     register_macros,
     handle_macros,
     handle_macros, # To handle macro calls in macro
-    register_functions,
-    handle_functions, 
     register_constants,
     store_data_memory,
     replace_halts,
