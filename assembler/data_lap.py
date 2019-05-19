@@ -102,14 +102,19 @@ def store_data_memory(assembler):
                 abs_addresses.append(Data(cmd, val, addr))
             else:
                 # adds .data labels as well
-                
                 val = args[1]
+                
                 data = Data(cmd, val, addr)
                 if cmd == ".ds": # Split it up into chars
                     Data.idx -= len(data.vals) # Shitty solution for chunks
                     data.val += "\0"
                     for char in data.val:
-                        inc_addresses.append(Data(".dc", char, None))
+                        inc_addresses.append(Data(".dc", char, None)) # Adds idx earlier removed
+                elif len(args) > 2: # ARRAY
+                    #print("Pre array:\n" + "\n".join([str(data) for data in inc_addresses]))
+                    for val in args[2:]:
+                        inc_addresses.append(Data(data.cmd, val, None))
+                    #print("Post array:\n" + "\n".join([str(data) for data in inc_addresses]))
                 else:
                     inc_addresses.append(data)
         else:

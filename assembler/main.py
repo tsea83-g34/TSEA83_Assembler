@@ -63,6 +63,8 @@ class Assembler():
     def assemble(self):
 
         for lap in laps:
+            if self.opt.debug:
+                print("(Pre {})".format(lap.__name__))
             lap(self) # Do a lap and modify the code
             if self.opt.debug:
                 print("(Code after '{}')\n {}".format(lap.__name__ , "\n".join(self.lines)))
