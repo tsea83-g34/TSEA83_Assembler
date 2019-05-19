@@ -2,7 +2,7 @@ import argparse
 import sys 
 import os 
 from assembler.laps import laps
-
+import assembler.hexdump as hexdump
 
 class Assembler():
     def __init__(self, file_path, opt):
@@ -59,6 +59,13 @@ class Assembler():
     def add_data_debug(self):
         self.data_memory = [line + "," for line in self.data_memory]
 
+    def create_hex_dump(self):
+        bytes_list = hexdump.create_hex_dump(self.res, self.data_memory)
+        uart_out = open(self.opt.uart, "wb")
+        bytes_res = bytes(bytes_list)
+        uart_out.write(bytes_res)
+        uart_out.close()
+
     
     def assemble(self):
 
@@ -70,7 +77,8 @@ class Assembler():
                 print("(Code after '{}')\n {}".format(lap.__name__ , "\n".join(self.lines)))
         
        
-
+        # Create hex dump
+        self.create_hex_dump()
         if not self.opt.bin:
             self.res = self.bin_to_hex(self.res)
             self.data_memory = self.bin_to_hex(self.data_memory, 8)
@@ -114,6 +122,7 @@ def main():
     parser.add_argument("input_file", type=str)
     parser.add_argument("--out", type=str, default="out/program.vhd")
     parser.add_argument("--dm_name", type=str, default="out/data.vhd")
+    parser.add_argument("--uart", type=str, default="uart.bin")
     parser.add_argument("--bin", action="store_const", const=True, default=False)
     parser.add_argument("--debug", action="store_const", const=True, default=False)
     parser.add_argument("--debug_spec", type=str, default="")

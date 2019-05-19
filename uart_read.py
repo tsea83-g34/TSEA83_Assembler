@@ -1,0 +1,6 @@
+file = open("out/uart.bin", "rb")
+res = file.read()
+hexa = res.hex()
+val = int(hexa, 16)
+bin_val = bin(val)
+print(bin_val)
