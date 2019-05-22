@@ -51,7 +51,10 @@ def fetch_registers(num_registers, dest_start_index=8, args_idx=1):
 def fetch_immediate(arg_idx, length=16, ir_idx=16):
     def anon(self, assembler, instruction, args):
         immediate_str = args[arg_idx]
-        val = get_immediate(immediate_str)
+        if immediate_str in assembler.labels:
+            val = assembler.labels[immediate_str]
+        else:
+            val = get_immediate(immediate_str)
         instruction[ir_idx:ir_idx+length] = int_to_bin_fill(val, length) 
         return instruction
     return anon

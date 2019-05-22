@@ -23,7 +23,6 @@ def get_chunk_val(hexa_chunk):
 
 def get_line_bytes(memory, line_size):
     res = []
-    print(memory)
     for line in memory:
         hexa = hex(int(line,2))
         hexa_str = str(hexa)[2:]
@@ -46,5 +45,4 @@ def create_hex_dump(pm, dm):
     for i in range(0, len(bytes_bin), 8):
         chunk = bytes_bin[i:i+8]
         bytes_res.append(int(chunk, 2))
-    print(bytes_res)
     return bytes_res
