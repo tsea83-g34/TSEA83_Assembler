@@ -122,7 +122,7 @@ def handle_labels(assembler):
             if len(rest) == 0:
                 line = rest
                 assembler.labels[label] = idx
-                assembler.constants[label] = idx
+                #assembler.constants[label] = idx
                 continue # Don't need to increment, like putting label on same line
             assembler.labels[label] = idx 
         lines.append(line)
@@ -214,7 +214,6 @@ laps = [
     subroutine_lap, # Has to be before handle_labels
     replace_pop_push, # Again to handle subroutine push/pop
     handle_labels,
-    handle_constants, # To insert labels used as constants
     insert_subroutine_indexes,
     handle_sizes, # To clean up inserted instructions TODO: Maybe unnecessary
     handle_instructions,
