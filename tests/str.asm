@@ -3,5 +3,5 @@
 .data STR2
 .ds "56789"
 
-load[2] r1, r1, STR1
-load[2] r1, r1, STR2
+load[2] r1, r1, STR1 ; 0
+load[2] r1, r1, STR2 ; 6 
