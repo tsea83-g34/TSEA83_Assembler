@@ -4,6 +4,7 @@ CALL_IDX_PLACEHOLDER = "$$CALL_IDX$$"
 CALL_PLACEHOLDER_OFFSET = 4# Changed this 
 RET_IDX_PLACEHOLDER = "$$RET_IDX$$"
 RET_PLACEHOLDER_OFFSET = 1
+NULL_REG = "r14"
 
 
 def subroutine_lap(assembler):
@@ -25,7 +26,7 @@ def insert_subroutine_indexes(assembler):
 
 def insert_call(assembler, line):
     lines = []
-    lines.append("movlo {} {} {}".format(ADDRESS_REGISTER, ADDRESS_REGISTER, CALL_IDX_PLACEHOLDER))
+    lines.append("addi {} {} {}".format(ADDRESS_REGISTER, NULL_REG, CALL_IDX_PLACEHOLDER))
     lines.append("push {} [2]".format(ADDRESS_REGISTER))
     lines.append(line.replace("call", "rjmp"))
     return lines
