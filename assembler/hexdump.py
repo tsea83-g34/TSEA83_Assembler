@@ -1,6 +1,7 @@
 def append_with_start_stop(seq, num):
     bin_str = bin(num)[2:]
     bin_str = "0" * (8-len(bin_str)) + bin_str
+    bin_str = bin_str[::-1] # LSB first, reverse
     #seq.append("0" + bin_str + "1") # Start stop not need
     seq.append(bin_str)
 
@@ -17,7 +18,6 @@ def get_memory_length_list(memory):
 def get_chunk_val(hexa_chunk):
     val = int(hexa_chunk, 16)
     chunk_bin = bin(val)[2:]
-    chunk_bin = chunk_bin[::-1] # LSB first, reverse
     chunk_val = int(chunk_bin, 2)
     return chunk_val
 
