@@ -1,0 +1,4 @@
+.dw 0x09abcdef
+.dh 0x09ab
+.db 0xcd    ; Data 3
+.dh 0xeffe  ; Data 2, 1

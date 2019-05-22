@@ -1,5 +1,6 @@
-from assembler.instructions.instructions import get_immediate, int_to_bin_fill
- 
+from assembler.instructions.instructions import  int_to_bin_fill
+
+MAX_DM_SIZE = 64000
 
 byte_sizes = {
     ".db": 1,
@@ -22,7 +23,7 @@ class Data:
         self.addr = addr
         self.vals = []
         if cmd in byte_sizes:
-            self.val = get_immediate(self.val)
+            self.val = eval(self.val)
             self.init_simple_val(byte_sizes[cmd])
         elif cmd == ".dc":
             self.vals.append(char_to_bin(self.val))
@@ -33,7 +34,7 @@ class Data:
         if addr == None: # Auto inc
             self.addr = Data.idx
             Data.idx += self.size 
-        self.total_size += self.size 
+        Data.total_size += self.size 
 
     def init_simple_val(self, size):
         bin_str = int_to_bin_fill(self.val, 8*size)
@@ -98,7 +99,7 @@ def store_data_memory(assembler):
             addr = None # Just auto inc
             if line.find(":") != -1: # Absolute address `.db 100: 0xff`
                 val = args[2]
-                addr = get_immediate(args[1].replace(":", ""))
+                addr = eval(args[1].replace(":", ""))
                 abs_addresses.append(Data(cmd, val, addr))
             else:
                 # adds .data labels as well
@@ -107,6 +108,7 @@ def store_data_memory(assembler):
                 data = Data(cmd, val, addr)
                 if cmd == ".ds": # Split it up into chars
                     Data.idx -= len(data.vals) # Shitty solution for chunks
+                    Data.total_size -= len(data.vals) # Shitty solution for chunks
                     data.val += "\0"
                     for char in data.val:
                         inc_addresses.append(Data(".dc", char, None)) # Adds idx earlier removed
@@ -126,7 +128,7 @@ def store_data_memory(assembler):
     data_memory_size = Data.total_size
     if len(abs_addresses) > 0:
         data_memory_size = max(Data.total_size, get_max_addr(abs_addresses))
-    data_memory = ["0"*8] * data_memory_size
+    data_memory = ["0"*8] * MAX_DM_SIZE
     
     # Switch these around if absolute addresses should overwrite the incremented
     for data in abs_addresses:
@@ -144,5 +146,5 @@ def store_data_memory(assembler):
         data_memory[idx: idx+data.size] = data.vals 
         chunk_idx = (chunk_idx + data.size) % 4
         idx += data.size 
-    assembler.data_memory = data_memory
-    
+    last_idx = max(get_max_addr(abs_addresses), idx)
+    assembler.data_memory = data_memory[:last_idx]
