@@ -99,14 +99,14 @@ def handle_constants(assembler):
     lines = []
     for line in assembler.lines[:]:
         args = [arg.replace(',', '') for arg in line.split()] # remove commas
-        res = [] 
-        for arg in args:
+        res = [args[0]] 
+        for arg in args[1:]:
             if arg in assembler.constants:
                 res.append(assembler.constants[arg]) # replace it with the constant value 
             else:
                 res.append(arg)
             # Confusion, modifies 'commas' 
-        lines.append(" ".join(res))
+        lines.append(" ".join([str(arg) for arg in res])) # Make it string in case const was number
     assembler.lines = lines
 ### Maybe @variables, like @anon ....
 ###
@@ -214,6 +214,7 @@ laps = [
     subroutine_lap, # Has to be before handle_labels
     replace_pop_push, # Again to handle subroutine push/pop
     handle_labels,
+    handle_constants, # To insert labels used as constants
     insert_subroutine_indexes,
     handle_sizes, # To clean up inserted instructions TODO: Maybe unnecessary
     handle_instructions,
