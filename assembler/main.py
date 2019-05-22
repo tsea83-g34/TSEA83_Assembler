@@ -55,6 +55,8 @@ class Assembler():
     def add_debug(self, seq):
         pm = [seq[i] + ", -- " + self.final_lines[i] for i in range(len(seq))]
         for label, idx in self.labels.items():
+            if idx >= len(pm):
+                continue
             pm[idx] += " [{}]".format(label)
         return pm
 

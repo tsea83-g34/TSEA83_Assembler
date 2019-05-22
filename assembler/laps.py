@@ -121,7 +121,8 @@ def handle_labels(assembler):
             label, rest = line.split(':')
             if len(rest) == 0:
                 line = rest
-                assembler.labels[label] = idx 
+                assembler.labels[label] = idx
+                assembler.constants[label] = idx
                 continue # Don't need to increment, like putting label on same line
             assembler.labels[label] = idx 
         lines.append(line)
