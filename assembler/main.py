@@ -11,6 +11,8 @@ class Assembler():
         # Bad OOP
         self.file = open(file_path)
         self.lines = self.file.readlines()
+        # Add label for program_end 
+        self.lines.append("_program_end_:")
         self.file.close() 
 
         self.labels = dict()

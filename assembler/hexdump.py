@@ -6,9 +6,10 @@ def append_with_start_stop(seq, num):
 def get_memory_length_list(memory, line_size):
     res = []
     num_pm_bytes = len(memory)*4
-    num_pm_str = str(num_pm_bytes)
+    num_pm_str = str(num_pm_bytes);
     for num in num_pm_str:
         append_with_start_stop(res, int(num))
+    append_with_start_stop(res, 20);
     return res
 
 
