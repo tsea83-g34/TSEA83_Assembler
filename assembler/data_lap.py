@@ -136,14 +136,18 @@ def store_data_memory(assembler):
     
     idx = 0
     chunk_idx = 0
+    cur_label = None 
     for data in inc_addresses:
         if data.cmd == ".data":
-            assembler.constants[data.val] = str(idx)
+            cur_label = data.val 
             continue
         if 4 - chunk_idx < data.size:
             idx += (4-chunk_idx)
             chunk_idx = 0
         data_memory[idx: idx+data.size] = data.vals 
+        if cur_label != None:
+            assembler.constants[cur_label] = str(idx)
+            cur_label = None
         chunk_idx = (chunk_idx + data.size) % 4
         idx += data.size 
     last_idx = max(get_max_addr(abs_addresses), idx)
