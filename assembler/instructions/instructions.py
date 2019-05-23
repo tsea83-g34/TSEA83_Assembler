@@ -37,6 +37,8 @@ def set_instruction_registers(instruction, registers, start):
 
 
 def get_immediate(immediate_str):
+    if "'" in immediate_str:
+        return ord(eval(immediate_str))
     return eval(immediate_str)
 
 

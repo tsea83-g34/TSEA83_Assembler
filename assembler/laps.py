@@ -9,19 +9,16 @@ def remove_comments_and_whitespace(assembler):
     idx = 0
     is_multiline = False # If currently a multiline comment: `/* \n*$i *\` 
     for line in assembler.lines[:]:
-        line = line.strip()
         if is_multiline:
             if line.find("*/") != -1:
                 is_multiline = False
             continue 
-        if line[:2] == "/*":
-            if line[2:].find("*/") != -1:
+        if line.strip()[:2] == "/*":
+            if line[2:].strip().find("*/") != -1:
                 continue 
             is_multiline = True
             continue 
 
-        if  line.find("#") != -1:
-            line = line[:line.find("#")]
         elif line.find("//") != -1:
             line = line[:line.find("//")]
         elif line.find(";") != -1:

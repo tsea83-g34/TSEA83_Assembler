@@ -66,10 +66,11 @@ def get_max_addr (data_list):
 
 
 def get_multiline_str(assembler, first_line, idx):
+
     res = first_line
     quotes_count = first_line.count('"')
     while idx < len(assembler.lines) and quotes_count < 2:
-        res += "\n" + assembler.lines[idx]
+        res += assembler.lines[idx]
         quotes_count += assembler.lines[idx].count('"')
         idx += 1 
     return res, idx
@@ -136,7 +137,8 @@ def store_data_memory(assembler):
     
     idx = 0
     chunk_idx = 0
-    cur_label = None 
+    cur_label = None
+    
     for data in inc_addresses:
         if data.cmd == ".data":
             cur_label = data.val 
