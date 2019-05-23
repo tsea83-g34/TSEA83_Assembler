@@ -144,6 +144,10 @@ def store_data_memory(assembler):
         if 4 - chunk_idx < data.size:
             idx += (4-chunk_idx)
             chunk_idx = 0
+        elif chunk_idx == 1 and data.size == 2:
+            idx += 1 
+            chunk_idx = 2
+            assert (idx % 2 == 0), "Idx for half word is not divisible by two (misallignment)"
         data_memory[idx: idx+data.size] = data.vals 
         if cur_label != None:
             assembler.constants[cur_label] = str(idx)
