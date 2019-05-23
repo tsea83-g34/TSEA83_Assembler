@@ -9,6 +9,7 @@ def remove_comments_and_whitespace(assembler):
     idx = 0
     is_multiline = False # If currently a multiline comment: `/* \n*$i *\` 
     for line in assembler.lines[:]:
+        
         if is_multiline:
             if line.find("*/") != -1:
                 is_multiline = False
@@ -29,6 +30,25 @@ def remove_comments_and_whitespace(assembler):
         idx += 1
     assembler.lines = assembler.lines[:idx]
     
+def remove_empty_lines(assembler):
+    lines = []
+    is_ds = False 
+    quotes_count = 0 
+    for line in assembler.lines:
+        if is_ds:
+            quotes_count += line.count('"')
+        elif line.find(".ds") != -1:
+            is_ds = True 
+            quotes_count = line.count('"')
+        else:
+            line = line.strip()
+        if quotes_count >= 2:
+            is_ds = False 
+            quotes_count = 0
+        if len(line) != 0:
+            lines.append(line)
+    assembler.lines = lines
+
 
 
 def register_macros(assembler):
@@ -198,6 +218,7 @@ from assembler.subroutine_lap import subroutine_lap, insert_subroutine_indexes
 
 laps = [
     remove_comments_and_whitespace,
+    remove_empty_lines,
     register_macros,
     handle_macros,
     handle_macros, # To handle macro calls in macro
